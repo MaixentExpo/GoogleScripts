@@ -87,13 +87,6 @@ function createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
   oDiaporamaCible.saveAndClose();
 }
 
-function frenchDate(date) {
-  var month = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  var m = month[date.getMonth()];
-  var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
-  return dateStringFr
-}
-
 /**
  * createDiaporamaFromSlide24 est en fait un publipostage de vignettes
  * à raison de 6 vignettes par page mais avec 2 vignettes par enregistrement
