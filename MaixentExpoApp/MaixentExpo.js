@@ -4,19 +4,6 @@
  */
 
 /**
- * Présente une date sous la forme "12 avril 2019"
- * var maDate = new Date();
- * var maDateFrench = frenchDate(maDate)
- * @param {*} date 
- */
-function frenchDate(date) {
-  var month = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  var m = month[date.getMonth()];
-  var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
-  return dateStringFr
-}
-
-/**
  * Class Couleur
  * qui fournit un code couleur à chaque appel new_couleur()
  */
