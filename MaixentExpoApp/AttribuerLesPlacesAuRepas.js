@@ -16,6 +16,7 @@
  * REF_ZONES : la plage nommée des différentes zones sur la tables
  * La feuille "Tables" représentera graphiquement les tables avec leur n° de place et les REF_ZONES
  * Chaque table sera une plage nommée TABLE_1, TABLE_2, .. TABLE_N
+ * nom du groupe qui va occuper la place impair, n°place impair, ref zone, n°place pair, nom du groupe qui va occuper la place pair
  */
 function attribuerLesPlacesAuRepas() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
