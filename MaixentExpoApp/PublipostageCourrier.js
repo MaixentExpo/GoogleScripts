@@ -7,7 +7,7 @@
  * à raison d'une diapo par enregistrement filtrés
  * Les enregistrements pourront être filtrés sur une colonne
  * Les paramètres de la fonction :
- * sheetId     : Id du tableur ou nom du tableur
+ * sheetId     : Id du tableur
  * sheetName   : nom de la feuille qui contient les données du tableur
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
@@ -15,7 +15,7 @@
 function publipostageCourrier(sheetId, sheetName, filterName, filterValue) {
   var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
-  var spreadsheet = sheetId.length > 15 ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.openById(properties.getProperty(sheetId));
+  var spreadsheet = SpreadsheetApp.openById(sheetId);
   var sheet = spreadsheet.getSheetByName(sheetName)
   var iLastCol = sheet.getLastColumn()
   var iLastRow = sheet.getLastRow()
@@ -52,7 +52,7 @@ function publipostageCourrier(sheetId, sheetName, filterName, filterValue) {
   iLastRow = sValues.length;
   var reFilter = new RegExp(filterValue, 'g');
   for (iRow=1; iRow < iLastRow; iRow++) {   
-    if ( sValues[iRow][iCols[filterName]].match(reFilter, 'g') != null ) {
+    if ( (""+ sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null ) {
       sDatas.push(sValues[iRow]);
     } // endif
   } // endfor
