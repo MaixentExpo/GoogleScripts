@@ -1,5 +1,5 @@
 /**
- * createDiaporamaFromSlide24 est en fait un publipostage de vignettes
+ * PublipostageBadge24 est en fait un publipostage de vignettes
  * à raison de 6 vignettes par page mais avec 2 vignettes par enregistrement
  * La diapo Modèle contiendra des champs sous la forme {NomDeLaColonneXY} X n° de ligne Y n° de colonne
  * Le diaporama en sortie sera créé avec le même nom que le modèle avec un suffixe " - Pub"
@@ -10,7 +10,7 @@
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
  */
-function createDiaporamaFromSlide24(sheetId, sheetName, filterName, filterValue) {
+function PublipostageBadge24(sheetId, sheetName, filterName, filterValue) {
   var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
   var spreadsheet = sheetId.length > 15 ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.openById(properties.getProperty(sheetId));

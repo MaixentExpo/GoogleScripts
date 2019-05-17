@@ -1,5 +1,5 @@
 /**
- * createDiaporamaFromSlide est en fait un publipostage de diapositives
+ * publipostageCourrier est en fait un publipostage de diapositives
  * La diapo Modèle contiendra des champs sous la forme {NomDeLaColonne}
  * à remplir avec les données des colonnes de la feuille du tableur courant
  * Le diaporama en sortie sera créé avec le même nom que le modèle avec un suffixe " - Pub"
@@ -11,7 +11,7 @@
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
  */
-function createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
+function publipostageCourrier(sheetId, sheetName, filterName, filterValue) {
   var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
   var spreadsheet = sheetId.length > 15 ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.openById(properties.getProperty(sheetId));
