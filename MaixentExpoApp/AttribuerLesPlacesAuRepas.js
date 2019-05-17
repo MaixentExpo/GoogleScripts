@@ -1,5 +1,6 @@
 /**
  * Fonction : attribuerLesPlacesAuRepas
+ * Source : https://github.com/MaixentExpo/GoogleScripts/edit/master/MaixentExpoApp/AttribuerLesPlacesAuRepas.js
  * Script qui va attribuer les places des convives sur les tables de la salle
  * La feuille "Inscriptions" comportera au moins les colonnes suivantes :
  * en lecture
