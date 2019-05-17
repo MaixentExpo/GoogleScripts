@@ -1,6 +1,20 @@
 /**
- * attribuerLesPlacesAuRepas
- * 
+ * Fonction : attribuerLesPlacesAuRepas
+ * Script qui va attribuer les places des convives sur les tables de la salle
+ * La feuille "Inscriptions" comportera au moins les colonnes suivantes :
+ * en lecture
+ * Groupe : Nom éventuel d'un groupe pour regrouper des sous-groupes de personnes
+ * Nom    : Nom de la personne qui a inscrit un sous-groupe de personnes
+ * Nombre : Nombre de personne pour le sous-groupe
+ * Zone souhaitée : zone souhaitée par le groupe (nom d'une REF_ZONE)
+ * en écriture
+ * Table       : N° de la table attribué par le système
+ * Place début : à partir de ce n° de place
+ * Place fin   : jusqu'à ce n° de place
+ * La feuille "Technique" indiquera :
+ * REF_ZONES : la plage nommée des différentes zones sur la tables
+ * La feuille "Tables" représentera graphiquement les tables avec leur n° de place et les REF_ZONES
+ * Chaque table sera une plage nommée TABLE_1, TABLE_2, .. TABLE_N
  */
 function attribuerLesPlacesAuRepas() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
