@@ -1,20 +1,20 @@
 /**
  * PublipostageBadge24 est en fait un publipostage de vignettes
- * Référence : https://github.com/MaixentExpo/GoogleScripts/blob/master/MaixentExpoApp/PublipostageCourrier.js
+ * Référence : https://github.com/MaixentExpo/GoogleScripts/edit/master/MaixentExpoApp/PublipostageBadge24.js
  * à raison de 6 vignettes par page mais avec 2 vignettes par enregistrement
  * La diapo Modèle contiendra des champs sous la forme {NomDeLaColonneXY} X n° de ligne Y n° de colonne
  * Le diaporama en sortie sera créé avec le même nom que le modèle avec un suffixe " - Pub"
  * Les enregistrements pourront être filtrés sur une colonne de la table
  * Les paramètres de la fonction :
- * sheetId     : Id du tableur ou nom du tableur
+ * sheetId     : Id du tableur
  * sheetName   : nom de la feuille qui contient les données du tableur
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
  */
-function PublipostageBadge24(sheetId, sheetName, filterName, filterValue) {
+function publipostageBadge24(sheetId, sheetName, filterName, filterValue) {
   var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
-  var spreadsheet = sheetId.length > 15 ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.openById(properties.getProperty(sheetId));
+  var spreadsheet = SpreadsheetApp.openById(sheetId);
   var sheet = spreadsheet.getSheetByName(sheetName)
   var iLastCol = sheet.getLastColumn()
   var iLastRow = sheet.getLastRow()
