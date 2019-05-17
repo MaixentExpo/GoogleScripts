@@ -1,5 +1,6 @@
 /**
  * PublipostageBadge24 est en fait un publipostage de vignettes
+ * Référence : https://github.com/MaixentExpo/GoogleScripts/blob/master/MaixentExpoApp/PublipostageCourrier.js
  * à raison de 6 vignettes par page mais avec 2 vignettes par enregistrement
  * La diapo Modèle contiendra des champs sous la forme {NomDeLaColonneXY} X n° de ligne Y n° de colonne
  * Le diaporama en sortie sera créé avec le même nom que le modèle avec un suffixe " - Pub"

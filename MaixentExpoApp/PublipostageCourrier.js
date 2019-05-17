@@ -1,5 +1,6 @@
 /**
  * publipostageCourrier est en fait un publipostage de diapositives
+ * Source : https://github.com/MaixentExpo/GoogleScripts/blob/master/MaixentExpoApp/PublipostageBadge24.js
  * La diapo Modèle contiendra des champs sous la forme {NomDeLaColonne}
  * à remplir avec les données des colonnes de la feuille du tableur courant
  * Le diaporama en sortie sera créé avec le même nom que le modèle avec un suffixe " - Pub"
