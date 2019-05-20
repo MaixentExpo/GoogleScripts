@@ -56,8 +56,8 @@ function repartirBouteillesSurTables() {
   var lettreCouleur = ""
   var sBouteille = ""
   var iTable = 0;
-  // On les données calculées Bouteille Table sont d'abord enregistrées dans un array
-  // car les performances sont désastreuses si des accès en lecture et écriture sont réalisés dans la même boucle
+  // Les données calculées Bouteille et Table sont d'abord enregistrées en mémoire
+  // car les performances sont désastreuses si des accès en lecture et écriture sur la feuille sont réalisés dans la même boucle
   var sUpdates = [] 
   for(iRow=2; iRow<=iLastRow; iRow++) { // on commence à la ligne 2
     sCouleur = sheet.getRange(iRow, iColCouleur).getValue().trim()  
