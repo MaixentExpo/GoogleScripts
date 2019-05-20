@@ -56,6 +56,9 @@ function repartirBouteillesSurTables() {
   var lettreCouleur = ""
   var sBouteille = ""
   var iTable = 0;
+  // On les données calculées Bouteille Table sont d'abord enregistrées dans un array
+  // car les performances sont désastreuses si des accès en lecture et écriture sont réalisés dans la même boucle
+  var sUpdates = [] 
   for(iRow=2; iRow<=iLastRow; iRow++) { // on commence à la ligne 2
     sCouleur = sheet.getRange(iRow, iColCouleur).getValue().trim()  
     if ( sCouleur != sruptureCouleur ) {
@@ -67,10 +70,14 @@ function repartirBouteillesSurTables() {
     sBouteille = lettreCouleur + Utilities.formatString("%02d", iBouteille)
     iTable++
     // Mise à jour des colonnes Bouteilles et Tables
-    sheet.getRange(iRow, iColBouteille).setValue(sBouteille)
-    sheet.getRange(iRow, iColTable).setValue(iTable)
+    sUpdates.push([sBouteille, iTable]);
     if ( iTable >= qTable )
       iTable = 0      
+  } // endfor
+  // Mise à jour des colonnes de la feuille
+  for(iRow=2; iRow<=iLastRow; iRow++) { 
+    sheet.getRange(iRow, iColBouteille).setValue(sUpdates[iRow-2][0])
+    sheet.getRange(iRow, iColTable).setValue(sUpdates[iRow-2][1])
   } // endfor
     
 } // end repartirBouteillesSurTables
