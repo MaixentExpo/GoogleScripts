@@ -28,7 +28,7 @@ function repartirBouteillesSurTables() {
   var range = sheet.getRange(1, 1, 1, iLastCol);
   var values = range.getValues()
   var iColVignoble = 0
-  var iCouleur = 0
+  var iColCouleur = 0
   var iColBouteille = 0
   var iColTable = 0
   var sCell = ""
