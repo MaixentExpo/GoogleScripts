@@ -16,11 +16,13 @@
  * - Table     : le n° de la table pour le concours
  */
 function repartirBouteillesSurTables() {
-  // Constantes de la fonction
-  var NB_BOUTEILLES_PAR_TABLE = 6
+  // Ouverture du Spreadsheet courant
+  var spreadsheet = SpreadsheetApp.getActive()
+
+  // Récupéartion des paramètres
+  var NB_BOUTEILLES_PAR_TABLE = spreadsheet.getRangeByName("PL_BOUTEILLES_PAR_TABLE").getValue()
 
   // Ouverture de la feuille VINS
-  var spreadsheet = SpreadsheetApp.getActive()
   var sheet = spreadsheet.getSheetByName("VINS")
   // Recherche de la position des colonnes sur la 1ère ligne
   var iLastCol = sheet.getLastColumn()
