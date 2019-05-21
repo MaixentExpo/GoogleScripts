@@ -5,8 +5,8 @@
  * sur les différentes TABLES du concours de VINS
  * La répartition se basera sur la classification du vin référencée par la colonne "Couleur" dans la feuille
  * A blanc, B rosé, C rouge, D moelleux, E pétillant, F champagne
- * La lette qui précède la couleur servira à référencer la bouteille A01 pour par exemple nommée la 1ère bouteille de blanc
- * La lettre servi aussi à trier les couleurs de façon à goûter les bouteilles dans l'ordre alphabétique
+ * La lette qui précède la couleur servira à référencer la bouteille (A01 par exemple pour nommée la 1ère bouteille de blanc)
+ * La lettre servira aussi à trier les couleurs de façon à goûter les bouteilles dans l'ordre alphabétique
  * Le nombre de Tables est calculé en fonction du nombre de bouteilles et du NB_BOUTEILLES_PAR_TABLE
  * Les colonnes lues dans la feuille VINS sont :
  * - Vignoble
