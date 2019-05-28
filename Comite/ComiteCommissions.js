@@ -1,8 +1,12 @@
 /*
   ComiteCommissions
-  Retourne la liste des commisions affectée au Menmbres
+  Retourne la liste des commisions affectée au Membres
 */
 function ComiteCommissions() {
+  var oVar = {
+    style_bold : SpreadsheetApp.newTextStyle().setBold(true).build(),
+    style_red : SpreadsheetApp.newTextStyle().setForegroundColor("red").build()
+  }
   // Ouverture du tableur conteneur du script
   var spreadsheet = SpreadsheetApp.getActive();
   // Ouverture de la feuille MEMBRES
@@ -31,21 +35,20 @@ function ComiteCommissions() {
   // Mise à jour de la colonne Commissions de la feuille COMITE
   var sNom = ""
   var sCommissions = ""
-  var oCell
   var bAffecte = false
-  var aBolds = []
-  var jBold = {}
+  var aStyles = []
   for(iRow=1; iRow<iLastRow; iRow++) {
     sNom = valuesMembres[iRow][iColNom]
     if (sNom == "") 
       break
     sCommissions = ""
     bAffecte = false
-    aBolds = Array()
+    aStyles = Array()
     // Recherche du nom dans les commissions
-    for(var ir=0; ir<iLastRowCommissions-2; ir++) {
+    for(var ir=0; ir<iLastRowCommissions-1; ir++) {
       // boucle des affectations
       for(var ic=1; ic<iLastColCommissions; ic++) {
+        var oStyle = {}
         if (sNom == valuesCommissions[ir][ic]) {
           if (bAffecte) {
             sCommissions += " & "
@@ -53,41 +56,30 @@ function ComiteCommissions() {
           bAffecte = true
           if ( ic == 1 ) {
             // Colonne responsable commission
-            jBold["start"] = sCommissions.length
+            oStyle["start"] = sCommissions.length
           }
-          if ( valuesCommissions[ir][0] == "Présidence" ) {
-            if ( ic > 1 ) {
-              sCommissions += "Vice-présidence"
-            } else {
-              sCommissions += "Présidence"
-            } // endif
-          } else {
-            sCommissions += valuesCommissions[ir][0]  
-          } // endif
+          sCommissions += valuesCommissions[ir][0]  
           if ( ic == 1 ) {
-            jBold["end"] = sCommissions.length
-            aBolds.push(jBold)
+            oStyle["end"] = sCommissions.length
+            aStyles.push(oStyle)
           }
         } // endif
       } // end for
     } // end for
-    sheet.getRange(iRow+1, iColCommissions+1).setRichTextValue(getRichTextBold(sCommissions, aBolds))
+    sheet.getRange(iRow+1, iColCommissions+1).setRichTextValue(getRichTextBold(sCommissions, aStyles, oVar))
     valuesMembres[iRow][iColCommissions] = sCommissions
   } // endfor
   
-  
 } // end ComiteCommissions
 
-function getRichTextBold(textValue, aBolds) {
-  var bold = SpreadsheetApp.newTextStyle().setBold(true).build()
-  var red = SpreadsheetApp.newTextStyle().setForegroundColor("red").build()
+function getRichTextBold(textValue, aStyles, oVar) {
   var textRich = SpreadsheetApp.newRichTextValue()
   textRich = textRich.setText(textValue)
-  var jBold = {}
-  for (var i=0; i<aBolds.length; i++) {
-    jBold = aBolds[i]
-    textRich = textRich.setTextStyle(jBold.start, jBold.end, bold)
-    textRich = textRich.setTextStyle(jBold.start, jBold.end, red)
+  var oStyle = {}
+  for (var i=0; i<aStyles.length; i++) {
+    oStyle = aStyles[i]
+    textRich = textRich.setTextStyle(oStyle.start, oStyle.end, oVar.style_bold)
+    textRich = textRich.setTextStyle(oStyle.start, oStyle.end, oVar.style_red)
   }
   return textRich.build()
 }
