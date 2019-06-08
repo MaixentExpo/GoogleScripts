@@ -18,12 +18,12 @@ function calculParties() {
   // Recherche de la position des colonnes sur la 1ère ligne
   var iLastCol = sheet.getLastColumn()
   var iLastRow = sheet.getLastRow()
-  var range = sheet.getRange(1,1,1,iLastCol) // 1ère ligne
+  var range = sheet.getRange(1,1,2,iLastCol) // 2ère lignes
   var values = range.getValues()
   // rang des colonnes
   var iColPartie = 0
+  var iColJoueur = 0 // colonne j1,j2,j3,j4,j5
   var iColResultat = 0
-  var iColDonneur = 0
   var iColPreneur = 0
   var iColPartenaire = 0
   var iColContrat = 0
@@ -41,24 +41,35 @@ function calculParties() {
   var sCell = ""
   for(iCol=0; iCol<iLastCol; iCol++){
     sCell = values[0][iCol];
-    if ( sCell == "Partie" ) iColPartie = iCol;
-    if ( sCell == "Donneur" ) iColPartie = iCol;
-    if ( sCell == "Résultat" ) iColResultat = iCol;
-    if ( sCell == "Preneur" ) iColPreneur = iCol;
-    if ( sCell == "Partenaire" ) iColPartenaire = iCol;
-    if ( sCell == "Contrat" ) iColContrat = iCol;
-    if ( sCell == "Nombre de bouts" ) iColBouts = iCol;
-    if ( sCell == "Points" ) iColPoints = iCol;
-    if ( sCell == "Petit au bout" ) iColPetit = iCol;
-    if ( sCell == "Poignée" ) iColPoignee = iCol;
-    if ( sCell == "Double Poignée" ) iColDoublePoignee = iCol;
-    if ( sCell == "Triple Poignée" ) iColTriplePoignee = iCol;
-    if ( sCell == "Chelem annoncé" ) iColChelemAnnonce = iCol;
-    if ( sCell == "Chelem non annoncé" ) iColChelemNonAnnonce = iCol
+    if ( sCell == "partie" ) iColPartie = iCol;
+    if ( sCell == "j1" ) iColJoueur = iCol;
+    if ( sCell == "donneur" ) iColPartie = iCol;
+    if ( sCell == "resultat" ) iColResultat = iCol;
+    if ( sCell == "preneur" ) iColPreneur = iCol;
+    if ( sCell == "partenaire" ) iColPartenaire = iCol;
+    if ( sCell == "contrat" ) iColContrat = iCol;
+    if ( sCell == "bouts" ) iColBouts = iCol;
+    if ( sCell == "points" ) iColPoints = iCol;
+    if ( sCell == "petit" ) iColPetit = iCol;
+    if ( sCell == "poignee" ) iColPoignee = iCol;
+    if ( sCell == "doublePoignee" ) iColDoublePoignee = iCol;
+    if ( sCell == "triplePoignee" ) iColTriplePoignee = iCol;
+    if ( sCell == "chelemAnnonce" ) iColChelemAnnonce = iCol;
+    if ( sCell == "chelemNonAnnonce" ) iColChelemNonAnnonce = iCol
   } // endfor
 
+  // tableau des joueurs
+  var aJoueurs = []
+  for(iCol=iColJoueur; iCol<iColJoueur+5; iCol++){
+    sCell = values[1][iCol]; // 2ème ligne d'entête
+    if ( sCell.length > 0 ) {
+      aJoueurs.push(sCell)
+    }
+  } // end for
+  var qJoueurs = aJoueurs.length // nombre de joueurs
+
   // lecture des ligne parties
-  range = sheet.getRange(2,1,iLastRow,iLastCol)
+  range = sheet.getRange(3,1,iLastRow,iLastCol) // 2 lignes d'entête à sauter
   values = range.getValues()
   var sPreneur = ""
   var sPartenaire = ""
@@ -154,8 +165,34 @@ function calculParties() {
 
   } // endfor
   
-  // Mise à jour de la colonne résultat
+  // Mise à jour des colonne résultat j1 j2 j3 j4
+  var aCumuls = []
   for(iRow=0; iRow<iLastRow; iRow++) { 
-    sheet.getRange(iRow+2,iColResultat+1).setValue(values[iRow][iColResultat])
-  }
-}
+    if ( values[iRow][iColPreneur].length < 1 ) 
+      continue
+    sheet.getRange(iRow+3,iColResultat+1).setValue(values[iRow][iColResultat])
+    // Distribution des points aux joueurs
+    for (var ij = 0; ij<qJoueurs; ij++) {
+      if ( aJoueurs[ij] == values[iRow][iColPreneur]) {
+        switch (qJoueurs) {
+          case 4:
+            iPoints = values[iRow][iColResultat] * 3
+            break
+          case 5:
+            iPoints = values[iRow][iColResultat] * 2
+            break;
+        } // end switch
+      } else if ( aJoueurs[ij] == values[iRow][iColPartenaire]) {
+        iPoints = values[iRow][iColResultat] * 1
+      } else {
+        iPoints = values[iRow][iColResultat] * -1
+      }// endif
+      // Cumul des points
+      if (aCumuls[ij]) 
+        aCumuls[ij] += iPoints 
+      else 
+        aCumuls[ij] = iPoints
+      sheet.getRange(iRow+3,iColJoueur+1+ij).setValue(aCumuls[ij])
+    } // endfor
+  } // endfor
+} // end function
