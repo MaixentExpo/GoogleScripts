@@ -170,8 +170,9 @@ function calculParties() {
   for(iRow=0; iRow<iLastRow; iRow++) { 
     if ( values[iRow][iColPreneur].length < 1 ) 
       continue
+    sheet.getRange(iRow+3,iColPartie+1).setValue(iRow+1)
     sheet.getRange(iRow+3,iColResultat+1).setValue(values[iRow][iColResultat])
-    // Distribution des points aux joueurs
+      // Distribution des points aux joueurs
     for (var ij = 0; ij<qJoueurs; ij++) {
       if ( aJoueurs[ij] == values[iRow][iColPreneur]) {
         switch (qJoueurs) {
