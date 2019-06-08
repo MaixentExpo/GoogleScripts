@@ -2,13 +2,8 @@ function onOpen() {
   var ui = SpreadsheetApp.getUi();
   // Or DocumentApp or FormApp.
   ui.createMenu('Tarots')
-      .addItem('Initialiser le jeux', 'initJeux')
       .addItem('Calculer les parties', 'calculParties')
       .addToUi();
-}
-
-function initJeux() {
-
 }
 
 function calculParties() {
@@ -134,8 +129,8 @@ function calculParties() {
     iPoints = iPoints - iScoreCible
     iScore = iPoints < 0 ? (iPoints-25)*coeff : (iPoints+25)*coeff
     // Calcul du score / chelem
-    if ( bChelemAnnonce ) iScore = iScore > 0 ? iScore + 400 : iScore - 200
-    if ( bChelemNonAnnonce ) iScore += 200
+    if ( bChelemAnnonce == "Oui" && bChelemNonAnnonce != "Oui" ) iScore = iScore > 0 ? iScore + 400 : iScore - 200
+    if ( bChelemNonAnnonce == "Oui" && bChelemAnnonce != "Oui" ) iScore += 200
     // Calcul petit au bout
     if ( sPetit == sPreneur || sPetit == sPartenaire ) 
       iScore = iScore > 0 ? iScore + 10*coeff : iScore + 10*coeff
