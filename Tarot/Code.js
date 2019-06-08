@@ -125,12 +125,24 @@ function calculParties() {
         coeff = 6
         break
     }
+    // Contrôle cohérence
+    if ( (sPoignee.length > 0 && sDoublePoignee.length > 0 ) 
+    || (sPoignee.length > 0 && sTriplePoignee.length > 0 )
+    || (sDoublePoignee.length > 0 && sTriplePoignee.length > 0 )
+    ) {
+      SpreadsheetApp.getUi().alert(Utilities.formatString('Erreur de saisie des Poignées'));
+      return
+    } // endif
+    if ( bChelemAnnonce == "Oui" && bChelemNonAnnonce == "Oui" ) {
+      SpreadsheetApp.getUi().alert(Utilities.formatString('Erreur de saisie des Chelems'));
+      return
+    } // endif
     // calcul du score
     iPoints = iPoints - iScoreCible
     iScore = iPoints < 0 ? (iPoints-25)*coeff : (iPoints+25)*coeff
     // Calcul du score / chelem
-    if ( bChelemAnnonce == "Oui" && bChelemNonAnnonce != "Oui" ) iScore = iScore > 0 ? iScore + 400 : iScore - 200
-    if ( bChelemNonAnnonce == "Oui" && bChelemAnnonce != "Oui" ) iScore += 200
+    if ( bChelemAnnonce == "Oui" ) iScore = iScore > 0 ? iScore + 400 : iScore - 200
+    if ( bChelemNonAnnonce == "Oui" ) iScore += 200
     // Calcul petit au bout
     if ( sPetit == sPreneur || sPetit == sPartenaire ) 
       iScore = iScore > 0 ? iScore + 10*coeff : iScore + 10*coeff
