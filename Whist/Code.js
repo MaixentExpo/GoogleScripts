@@ -25,7 +25,7 @@ function demasquerLesColonnes() {
       break
     } // endif
   }
-}
+} // end demasquerLesColonnes
 
 /**
  * Initilaisation du jeu
@@ -92,7 +92,7 @@ function initJeu() {
     sheet.getRange(4, ic+1, iLastRow-3, 2).clear({contentsOnly: true}) // Dem. et Plis
   } // end for
 
-}
+} // end initJeu
 
 /**
  * Calcul des médailles Or Argent Bronze Chocolat
@@ -243,12 +243,5 @@ function calculMedailles() {
         range.getCell(1, iColJoueur + aJoueurs[ij].id * 4 + 1).setBackground("white");
       } // endif
     } // end for
-    // fond blanc pour le reste des colonnes
-    var ic = iColJoueur + ij * 4 + 1 // colonne à masquer plus loin
-    for (; ij < qColonnes; ij++) {
-      range.getCell(1, iColJoueur + ij * 4 + 1).setBackground("white");
-    } // end for
-    // on masque les colonnes non utilisées - fonction abandonée car certaines cellules sont protégées
-    //sheet.hideColumns(ic, iLastCol-ic+1);
   } // endfor
-} // end function
+} // end calculMedailles
