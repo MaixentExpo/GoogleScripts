@@ -10,7 +10,11 @@ function InitialiserLeCalendrier() {
   // Ouverture du tableur conteneur du script
   var spreadsheet = SpreadsheetApp.getActive();
   // Ouverture de la feuille courante
-  var sheet = spreadsheet.getActiveSheet()
+  var sheet = spreadsheet.getActiveSheet();
+  
+  // Mise à jour autorisée ?
+  var ok = sheet.getCell(0,0)
+  if ( sheet.getRange(0,0).getValue() != "*") return;
   
   var annee = parseInt(sheet.getName())
   var ijs = new Date(annee, 0, 1).getDay() // jour semaine du 1er janvier
@@ -78,18 +82,18 @@ function JoursFeries (an) {
   
   var jf = {}
   jf[1] = JourAn
-  jf[(FeteTravail.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = FeteTravail
-  jf[(Victoire1945.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Victoire1945
-  jf[(FeteNationale.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = FeteNationale
-  jf[(Assomption.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Assomption
-  jf[(Toussaint.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Toussaint
-  jf[(Armistice.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Armistice
-  jf[(Noel.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Noel
-  jf[(Paques.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Paques
-  jf[(LundiPaques.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = LundiPaques
-  jf[(Ascension.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Ascension
-  jf[(Pentecote.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Pentecote
-  jf[(LundiPentecote.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = LundiPentecote
+  jf[Math.floor(FeteTravail.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = FeteTravail
+  jf[Math.floor(Victoire1945.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Victoire1945
+  jf[Math.floor(FeteNationale.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = FeteNationale
+  jf[Math.floor(Assomption.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Assomption
+  jf[Math.floor(Toussaint.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Toussaint
+  jf[Math.floor(Armistice.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Armistice
+  jf[Math.floor(Noel.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Noel
+  jf[Math.floor(Paques.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Paques
+  jf[Math.floor(LundiPaques.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = LundiPaques
+  jf[Math.floor(Ascension.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Ascension
+  jf[Math.floor(Pentecote.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = Pentecote
+  jf[Math.floor(LundiPentecote.getTime() - JourAn.getTime()) / (24 * 3600 * 1000)] = LundiPentecote
 	
     return jf
 }
