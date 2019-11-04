@@ -27,7 +27,7 @@ function InitialiserLeCalendrier() {
   var jourFeries = JoursFeries(annee)
   
   // Déclaration de la plage à mettre à jour
-  var range = sheet.getRange("PLAGE_CALENDRIER")
+  var range = sheet.getRange("A2:AV32")
   // nettoyage de la plage
   range.setValue("").setBackground("white")
   var icol, irow, cell1, cell2, cell3;
