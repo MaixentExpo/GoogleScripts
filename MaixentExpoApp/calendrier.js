@@ -20,14 +20,14 @@ function InitialiserLeCalendrier() {
   var sheet = spreadsheet.getActiveSheet()
   
   // Mise à jour autorisée ?
-  if ( sheet.getRange(1,1).getValue() != "*") return;
+  if ( sheet.getRange("A1").getValue() != "*") return;
   
   var annee = parseInt(sheet.getName())
   var jourSemaine = { 1:"L", 2:"M", 3:"M", 4:"J", 5:"V", 6:"S", 0:"D"} // jour semaine
   var jourFeries = JoursFeries(annee)
   
   // Déclaration de la plage à mettre à jour
-  var range = sheet.getRange(2,1,31,48)
+  var range = sheet.getRange("PLAGE_CALENDRIER")
   // nettoyage de la plage
   range.setValue("").setBackground("white")
   var icol, irow, cell1, cell2, cell3;
@@ -57,7 +57,7 @@ function InitialiserLeCalendrier() {
       irow++
     } // end while month
   } // end while annee
-  sheet.getRange(1,1).setValue("")
+  sheet.getRange("A1").setValue("")
 } // end InitialiserLeCalendrier
 
 /**
