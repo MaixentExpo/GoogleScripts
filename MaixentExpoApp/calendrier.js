@@ -26,12 +26,14 @@ function InitialiserLeCalendrier() {
   var jourSemaine = { 1:"L", 2:"M", 3:"M", 4:"J", 5:"V", 6:"S", 0:"D"} // jour semaine
   var jourFeries = JoursFeries(annee)
   
+  var dateCourante = new Date(annee, "00", "01")
+  var conges = getConges(spreadsheet, dateCourante) 
+  
   // Déclaration de la plage à mettre à jour
   var range = sheet.getRange("A2:AV32")
   // nettoyage de la plage
   range.setValue("").setBackground("white")
-  var icol, irow, cell1, cell2, cell3;
-  var dateCourante = new Date(annee, "00", "01")
+  var icol, irow, cell0, cell1, cell2, cell3;
   var iq = 1 // quantième du jour de l'année
   var imonth = 0
   while ( dateCourante.getFullYear() == annee ) {
@@ -39,9 +41,15 @@ function InitialiserLeCalendrier() {
     icol = imonth * 4 + 1
     irow = 1
     while ( dateCourante.getMonth() == imonth ) {
+      cell0 = range.getCell(irow, icol)
       cell1 = range.getCell(irow, icol+1)
       cell2 = range.getCell(irow, icol+2)
       cell3 = range.getCell(irow, icol+3)
+      if ( conges[formatDateMMdd(dateCourante)] != null ) {
+        cell0.setBackground("#e6b8af")
+      } else {
+        cell0.setBackground("white")
+      } // endif
       if ( dateCourante.getDay() == 0 
         || jourFeries[formatDateMMdd(dateCourante)] != null) { // dimanche ou jour férié
         cell1.setBackground("#fff2cc").setValue(jourSemaine[dateCourante.getDay()])
@@ -89,23 +97,49 @@ function JoursFeries (an) {
   var LundiPentecote = new Date(an, MoisPaques-1, JourPaques+50)
 
   var jf = {}
-  jf[formatDateMMdd(JourAn)] = JourAn
-  jf[formatDateMMdd(FeteTravail)] = FeteTravail
-  jf[formatDateMMdd(Victoire1945)] = Victoire1945
-  jf[formatDateMMdd(FeteNationale)] = FeteNationale
-  jf[formatDateMMdd(Assomption)] = Assomption
-  jf[formatDateMMdd(Toussaint)] = Toussaint
-  jf[formatDateMMdd(Armistice)] = Armistice
-  jf[formatDateMMdd(Noel)] = Noel
-  jf[formatDateMMdd(Paques)] = Paques
-  jf[formatDateMMdd(LundiPaques)] = LundiPaques
-  jf[formatDateMMdd(Ascension)] = Ascension
-  jf[formatDateMMdd(Pentecote)] = Pentecote
-  jf[formatDateMMdd(LundiPentecote)] = LundiPentecote
+  jf[formatDateMMdd(JourAn)] = true
+  jf[formatDateMMdd(FeteTravail)] = true
+  jf[formatDateMMdd(Victoire1945)] = true
+  jf[formatDateMMdd(FeteNationale)] = true
+  jf[formatDateMMdd(Assomption)] = true
+  jf[formatDateMMdd(Toussaint)] = true
+  jf[formatDateMMdd(Armistice)] = true
+  jf[formatDateMMdd(Noel)] = true
+  jf[formatDateMMdd(Paques)] = true
+  jf[formatDateMMdd(LundiPaques)] = true
+  jf[formatDateMMdd(Ascension)] = true
+  jf[formatDateMMdd(Pentecote)] = true
+  jf[formatDateMMdd(LundiPentecote)] = true
 	
   return jf
 }
 
 function formatDateMMdd(date) {
   return date.getMonth().toString() + "_" + date.getDate().toString()
+}
+
+/**
+ * Reourne un dictionnaire des congés scolaires key:MM_dd value:true
+ * @param {SpreadSheet} spreadsheet 
+ * @param {Date} date 
+ */
+function getConges(spreadsheet, date) {
+  var values = spreadsheet.getRangeByName("CONGES").getValues()
+  var iLastRow = values.length
+  var irow, dateStart, dateEnd
+  var oConges = {}
+  for ( irow=0; irow < iLastRow; irow++ ) {
+    dateStart = values[irow][1]
+    dateEnd = values[irow][2]
+    if ( dateStart.getFullYear() == date.getFullYear() ) {
+      while ( formatDateMMdd(dateStart) <= formatDateMMdd(dateEnd) ) {
+        oConges[formatDateMMdd(dateStart)] = true
+        dateStart.setDate(dateStart.getDate() + 1)
+        if ( dateStart.getFullYear() > date.getFullYear() ) {
+          break;
+        } // endif
+      } // end while dateStart
+    } // end if dateStart
+  } // end for row
+  return oConges  
 }
