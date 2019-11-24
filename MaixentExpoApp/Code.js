@@ -8,10 +8,10 @@
 function onOpen() {
   var spreadsheet = SpreadsheetApp.getActive();
   var menuItems = [
-    {name: 'Email', functionName: 'sendEmail'},
-    {name: 'Alert...', functionName: 'alert'},
-    {name: 'showPrompt...', functionName: 'showPrompt'},
-    {name: 'showAlert...', functionName: 'showAlert'}
+    {name: "Email", functionName: 'sendEmail'},
+    {name: "Alert...", functionName: 'alert'},
+    {name: "showPrompt...", functionName: 'showPrompt'},
+    {name: "showAlert...", functionName: 'showAlert'}
   ];
   spreadsheet.addMenu('Foire Expo', menuItems);
 }
