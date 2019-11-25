@@ -2,7 +2,7 @@
   Script de Mailing
 */
 function prepareMessage() {
-  prepareMessageResultat("15gPNGjf_Sga1Ips11NccEeSUq7X8eJjEiOHPMooT5jw", "VINS", "MODELE", "BODY");
+  prepareMessageResultat("15gPNGjf_Sga1Ips11NccEeSUq7X8eJjEiOHPMooT5jw", "VINS", "RESULTAT");
 }
 
 
@@ -11,7 +11,7 @@ function prepareMessage() {
   Retourne le message à envoyer à la presse
   Les colonnes devront êtres préalablement triées sur Medaille, Couleur, Vin
 */
-function prepareMessageResultat(source_file_id, sheet_name, range_model, cible_range_name) {
+function prepareMessageResultat(source_file_id, sheet_name, cible_range_name) {
   var ui = SpreadsheetApp.getUi(); // Same variations.
   var yesnoConfirm = ui.alert(
      "Préparer le message",
@@ -61,6 +61,8 @@ function prepareMessageResultat(source_file_id, sheet_name, range_model, cible_r
   var sMedaille = "";
   var sRuptureMedaille = "";
   var sResultat = "";
+  // var rich = SpreadsheetApp.newRichTextValue();
+  // var iPos = 0;
   var bFirst = true;
   iRow = 2; // on commence sur la 2ème ligne
   for(; iRow<iLastRow; iRow++) {
@@ -74,28 +76,24 @@ function prepareMessageResultat(source_file_id, sheet_name, range_model, cible_r
     sCouleur = sheet.getRange(iRow, iCouleur).getValue();
     
     if ( sMedaille != sRuptureMedaille ) {
+      // rich.set
       sResultat += '\n';
+      if (bFirst == false) sResultat += "\n"
       sResultat += sMedaille == "or" ? "Médaille d'or" : sMedaille == "argent" ? "Médaille d'argent" : "Médaille de bronze";
-      sResultat += " : ";
+      sResultat += " :\n";
       bFirst = true;
       sRuptureMedaille = sMedaille;
     } // endif
-    if (bFirst == false) sResultat += ", "
+    if (bFirst == false) sResultat += "\n"
     bFirst = false
-    sResultat += sProducteur + " (" + sVin + ") " + sVignoble
-      
+    sResultat += "- " + sProducteur + " (" + sVin + ") " + sVignoble
   } // endfor
 
   // Ouverture du fichier mailing courant
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  // sauvegarde du modèle
-  var modele = spreadsheet.getRange(range_model).getRichTextValue();
-  // recopie du modele dans la cible
+  // Copie du resulat dans la cible
   var cible = spreadsheet.getRange(cible_range_name);
-  cible.setRichTextValue(modele);
-  // Remplacement du résultat
-  var findText = cible.createTextFinder("{RESULTATS}");
-  findText.replaceAllWith(sResultat);
+  cible.setValue(sResultat);
   
 } // end messagePresseConcoursBovins
 
@@ -173,13 +171,14 @@ function fx_sendMail() {
  */
 function fx_ReplaceRichText(richTextValue, tag, stringForReplace) {
   // get an array of Runs for the given Rich Text
-  var rtRuns = richTextValue.getRuns();
+  var runs = richTextValue.getRuns();
   // loop the array
-  for (var i = 0; i < rtRuns.length; i++) {
-    var richText = rtRuns[i].getText();
+  for (var i = 0; i < runs.length; i++) {
+    var richText = runs[i].getText();
+    var style = runs[i].getTextStyle();
     var re = new RegExp(tag, "g");
     richText = richText.replace(re, stringForReplace);
-    rtRuns[i] = richText;
+    runs[i] = richText;
   }
   return richTextValue;
 }
