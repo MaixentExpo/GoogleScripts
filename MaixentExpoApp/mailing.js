@@ -88,15 +88,15 @@ function prepareMessageResultat(source_file_id, sheet_name, range_model, cible_r
 
   // Ouverture du fichier mailing courant
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-
-  // Remplacement de {RESULTAT} de modele
+  // sauvegarde du modèle
   var modele = spreadsheet.getRange(range_model).getRichTextValue();
-  var cible = fx_ReplaceRichText(modele, "{RESULTAT}", sResultat);
+  // recopie du modele dans la cible
+  var cible = spreadsheet.getRange(cible_range_name);
+  cible.setRichTextValue(modele);
+  // Remplacement du résultat
+  var findText = cible.createTextFinder("{RESULTATS}");
+  findText.replaceAllWith(sResultat);
   
-  // Mise à jour de la cellule MAIL_PRESSE
-  var cell = spreadsheet.getRange(cible_range_name);
-  cell.setValue(cible);
-
 } // end messagePresseConcoursBovins
 
 function recupEmail() {
@@ -178,7 +178,8 @@ function fx_ReplaceRichText(richTextValue, tag, stringForReplace) {
   for (var i = 0; i < rtRuns.length; i++) {
     var richText = rtRuns[i].getText();
     var re = new RegExp(tag, "g");
-    rtRuns[i] = richText.replace(re, stringForReplace);
+    richText = richText.replace(re, stringForReplace);
+    rtRuns[i] = richText;
   }
   return richTextValue;
 }
