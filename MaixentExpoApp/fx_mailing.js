@@ -45,18 +45,101 @@ function fx_envoyerMessage() {
   var replyTo = spreadsheet.getRangeByName("REPLYTO").getCell(1,1).getValue();
   var subject = spreadsheet.getRangeByName("SUBJECT").getCell(1,1).getValue();
   var richText = spreadsheet.getRangeByName("BODY").getCell(1,1).getRichTextValue();
+  var pjSheet = spreadsheet.getRangeByName("PJ_SHEET") != null ? spreadsheet.getRangeByName("PJ_SHEET").getCell(1,1).getValue() : null;
+  var pjFile1 = spreadsheet.getRangeByName("PJ_FILE1") != null ? spreadsheet.getRangeByName("PJ_FILE1").getCell(1,1).getValue() : null;
+  var pjFile2 = spreadsheet.getRangeByName("PJ_FILE2") != null ? spreadsheet.getRangeByName("PJ_FILE2").getCell(1,1).getValue() : null;
+  var pjFile3 = spreadsheet.getRangeByName("PJ_FILE3") != null ? spreadsheet.getRangeByName("PJ_FILE3").getCell(1,1).getValue() : null;
   // Message en Html enrichi
   var html = fx_htmlEncodeRichText(richText);
   // Envoi du message
-  MailApp.sendEmail({
-    replyTo: replyTo,
-    to: to,
-    copy: copy,
-    cc: cc,
-    subject: subject,
-    htmlBody: html
-  });
+  var blobs = [];
+  if ( pjSheet != null ) {
+    blobs.push(fx_SpreadsheetToExcel(pjSheet));
+  } 
+  if ( pjFile1 != null ) {
+    blobs.push(fx_FileToPdf(pjFile1));
+  }
+  if ( pjFile2 != null ) {
+    blobs.push(fx_FileToPdf(pjFile2));
+  }
+  if ( pjFile3 != null ) {
+    blobs.push(fx_FileToPdf(pjFile3));
+  }
+  if ( blobs.length > 0 ) {
+    MailApp.sendEmail({
+      replyTo: replyTo,
+      to: to,
+      copy: copy,
+      cc: cc,
+      subject: subject,
+      htmlBody: html,
+      attachments: blobs
+    });
+  } else {
+    MailApp.sendEmail({
+      replyTo: replyTo,
+      to: to,
+      copy: copy,
+      cc: cc,
+      subject: subject,
+      htmlBody: html
+    });
+  } // endif
   
+}
+/**
+// Send an email with two attachments: a file from Google Drive (as a PDF) and an HTML file.
+var file = DriveApp.getFileById('1234567890abcdefghijklmnopqrstuvwxyz');
+var blob = Utilities.newBlob('Insert any HTML content here', 'text/html', 'my_document.html');
+MailApp.sendEmail('mike@example.com', 'Attachment example', 'Two files are attached.', {
+    name: 'Automatic Emailer Script',
+    attachments: [file.getAs(MimeType.PDF), blob]
+});
+**/
+
+function fx_SpreadsheetToExcel(sheet_id){
+  // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
+  var blob = null;
+  
+  try {
+    var spreadsheet = SpreadsheetApp.openById(sheet_id);
+    var url = "https://docs.google.com/spreadsheets/d/" + sheet_id + "/export?format=xlsx";
+    var params = {
+      method      : "get",
+      headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
+      muteHttpExceptions: true
+    };
+    var blob = UrlFetchApp.fetch(url, params).getBlob();
+    blob.setName(spreadsheet.getName() + ".xlsx");
+    
+  } catch (f) {
+    Logger.log(f.toString());
+  }
+  return blob;
+}
+
+function fx_FileToPdf(sheet_id){
+  // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
+  var blob = null;
+  try {
+    var file = DriveApp.getFileById(sheet_id);
+    var params = {
+      method      : "get",
+      headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
+      muteHttpExceptions: true
+    };
+    var url_google = "https://docs.google.com/spreadsheets/d/";
+    if ( file.getMimeType() == MimeType.GOOGLE_DOCS ) url_google = "https://docs.google.com/document/d/"
+    if ( file.getMimeType() == MimeType.GOOGLE_SLIDES ) url_google = "https://docs.google.com/slides/d/"
+      
+    var url = url_google + sheet_id + "/export?format=pdf&size=7&fzr=true&portrait=false";
+    var blob = UrlFetchApp.fetch(url, params).getBlob();
+    blob.setName(file.getName() + ".pdf");
+    
+  } catch (f) {
+    Logger.log(f.toString());
+  }
+  return blob;
 }
 
 /**
