@@ -85,17 +85,7 @@ function fx_envoyerMessage() {
       htmlBody: html
     });
   } // endif
-  
 }
-/**
-// Send an email with two attachments: a file from Google Drive (as a PDF) and an HTML file.
-var file = DriveApp.getFileById('1234567890abcdefghijklmnopqrstuvwxyz');
-var blob = Utilities.newBlob('Insert any HTML content here', 'text/html', 'my_document.html');
-MailApp.sendEmail('mike@example.com', 'Attachment example', 'Two files are attached.', {
-    name: 'Automatic Emailer Script',
-    attachments: [file.getAs(MimeType.PDF), blob]
-});
-**/
 
 function fx_SpreadsheetToExcel(sheet_id){
   // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
@@ -130,7 +120,7 @@ function fx_FileToPdf(sheet_id){
     };
     var url_google = "https://docs.google.com/spreadsheets/d/";
     if ( file.getMimeType() == MimeType.GOOGLE_DOCS ) url_google = "https://docs.google.com/document/d/"
-    if ( file.getMimeType() == MimeType.GOOGLE_SLIDES ) url_google = "https://docs.google.com/slides/d/"
+    if ( file.getMimeType() == MimeType.GOOGLE_SLIDES ) url_google = "https://docs.google.com/presentation/d/"
       
     var url = url_google + sheet_id + "/export?format=pdf&size=7&fzr=true&portrait=false";
     var blob = UrlFetchApp.fetch(url, params).getBlob();
@@ -180,10 +170,6 @@ function fx_htmlEncodeRichText(richTextValue) {
   for (var i = 0; i < rtRuns.length; i++) {
     // return html version of a given run, append to existing string
     htmlString += fx_htmlStyleRtRun(rtRuns[i]);
-//    Logger.log("Run # " + i + " plain text: ");
-//    Logger.log(rtRuns[i].getText());
-//    Logger.log("Run # " + i + " Output:");
-//    Logger.log(htmlString);
   }
   return htmlString;
 }
