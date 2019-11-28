@@ -57,13 +57,13 @@ function fx_envoyerMessage() {
     blobs.push(fx_SpreadsheetToExcel(pjSheet));
   } 
   if ( pjFile1 != "" ) {
-    blobs.push(fx_FileToPdf(pjFile1));
+    blobs.push(fx_FileToPdf(pjFile1, "&portrait=false"));
   }
   if ( pjFile2 != "" ) {
-    blobs.push(fx_FileToPdf(pjFile2));
+    blobs.push(fx_FileToPdf(pjFile2, "&portrait=true"));
   }
   if ( pjFile3 != "" ) {
-    blobs.push(fx_FileToPdf(pjFile3));
+    blobs.push(fx_FileToPdf(pjFile3, "&portrait=true"));
   }
   if ( blobs.length > 0 ) {
     MailApp.sendEmail({
@@ -122,7 +122,13 @@ function fx_SpreadsheetToExcel(sheet_id){
   return blob;
 }
 
-function fx_FileToPdf(sheet_id){
+/**
+ * Conversion fichier Google Drive en PDF
+ * @param {String} sheet_id url du fichier ou seulement l'id
+ * @param {String} parametres "&portrait=false" par exemple
+ * @return {Blob} Objet du fichier converti
+**/
+function fx_FileToPdf(sheet_id, parametres){
   // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
   var blob = null;
   try {
@@ -141,7 +147,7 @@ function fx_FileToPdf(sheet_id){
     if ( file.getMimeType() == MimeType.GOOGLE_DOCS ) url_google = "https://docs.google.com/document/d/"
     if ( file.getMimeType() == MimeType.GOOGLE_SLIDES ) url_google = "https://docs.google.com/presentation/d/"
       
-    var url = url_google + file_id + "/export?format=pdf&size=7&fzr=true&portrait=false";
+    var url = url_google + file_id + "/export?format=pdf&size=7&fzr=true" + parametres;
     var blob = UrlFetchApp.fetch(url, params).getBlob();
     blob.setName(file.getName() + ".pdf");
     
