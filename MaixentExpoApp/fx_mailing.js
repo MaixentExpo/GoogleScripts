@@ -45,24 +45,24 @@ function fx_envoyerMessage() {
   var replyTo = spreadsheet.getRangeByName("REPLYTO").getCell(1,1).getValue();
   var subject = spreadsheet.getRangeByName("SUBJECT").getCell(1,1).getValue();
   var richText = spreadsheet.getRangeByName("BODY").getCell(1,1).getRichTextValue();
-  var pjSheet = spreadsheet.getRangeByName("PJ_SHEET") != null ? spreadsheet.getRangeByName("PJ_SHEET").getCell(1,1).getValue() : null;
-  var pjFile1 = spreadsheet.getRangeByName("PJ_FILE1") != null ? spreadsheet.getRangeByName("PJ_FILE1").getCell(1,1).getValue() : null;
-  var pjFile2 = spreadsheet.getRangeByName("PJ_FILE2") != null ? spreadsheet.getRangeByName("PJ_FILE2").getCell(1,1).getValue() : null;
-  var pjFile3 = spreadsheet.getRangeByName("PJ_FILE3") != null ? spreadsheet.getRangeByName("PJ_FILE3").getCell(1,1).getValue() : null;
+  var pjSheet = spreadsheet.getRangeByName("PJ_SHEET") != null ? spreadsheet.getRangeByName("PJ_SHEET").getCell(1,1).getValue() : "";
+  var pjFile1 = spreadsheet.getRangeByName("PJ_FILE1") != null ? spreadsheet.getRangeByName("PJ_FILE1").getCell(1,1).getValue() : "";
+  var pjFile2 = spreadsheet.getRangeByName("PJ_FILE2") != null ? spreadsheet.getRangeByName("PJ_FILE2").getCell(1,1).getValue() : "";
+  var pjFile3 = spreadsheet.getRangeByName("PJ_FILE3") != null ? spreadsheet.getRangeByName("PJ_FILE3").getCell(1,1).getValue() : "";
   // Message en Html enrichi
   var html = fx_htmlEncodeRichText(richText);
   // Envoi du message
   var blobs = [];
-  if ( pjSheet != null ) {
+  if ( pjSheet != "" ) {
     blobs.push(fx_SpreadsheetToExcel(pjSheet));
   } 
-  if ( pjFile1 != null ) {
+  if ( pjFile1 != "" ) {
     blobs.push(fx_FileToPdf(pjFile1));
   }
-  if ( pjFile2 != null ) {
+  if ( pjFile2 != "" ) {
     blobs.push(fx_FileToPdf(pjFile2));
   }
-  if ( pjFile3 != null ) {
+  if ( pjFile3 != "" ) {
     blobs.push(fx_FileToPdf(pjFile3));
   }
   if ( blobs.length > 0 ) {
@@ -85,6 +85,16 @@ function fx_envoyerMessage() {
       htmlBody: html
     });
   } // endif
+  
+  // Historisation de l'action dans la plage LOG
+  var slog = spreadsheet.getRangeByName("LOG") != null ? spreadsheet.getRangeByName("LOG").getCell(1,1).getValue() : "";
+  if ( slog != "" ) {
+    var strace = Utilities.formatString("%s par %s", Utilities.formatDate(new Date(), spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss"), Session.getActiveUser().getEmail());
+    if ( slog != "") slog += "\n";
+    slog += strace;
+    spreadsheet.getRangeByName("LOG").setValue(slog);
+  }
+
 }
 
 function fx_SpreadsheetToExcel(sheet_id){
@@ -92,7 +102,11 @@ function fx_SpreadsheetToExcel(sheet_id){
   var blob = null;
   
   try {
-    var spreadsheet = SpreadsheetApp.openById(sheet_id);
+    var spreadsheet = null;
+    if ( sheet_id.indexOf("https") > -1 )
+      spreadsheet = SpreadsheetApp.openByUrl(sheet_id);
+    else
+      spreadsheet = SpreadsheetApp.openById(sheet_id);
     var url = "https://docs.google.com/spreadsheets/d/" + sheet_id + "/export?format=xlsx";
     var params = {
       method      : "get",
@@ -112,7 +126,12 @@ function fx_FileToPdf(sheet_id){
   // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
   var blob = null;
   try {
-    var file = DriveApp.getFileById(sheet_id);
+    var file_id = sheet_id;
+    if ( sheet_id.indexOf("https") > -1 ) {
+      const regex = /.*\/d\/(.*)\/.*/g;
+      file_id = regex.exec(sheet_id)[1];
+    } // endif
+    var file = DriveApp.getFileById(file_id);
     var params = {
       method      : "get",
       headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
@@ -122,7 +141,7 @@ function fx_FileToPdf(sheet_id){
     if ( file.getMimeType() == MimeType.GOOGLE_DOCS ) url_google = "https://docs.google.com/document/d/"
     if ( file.getMimeType() == MimeType.GOOGLE_SLIDES ) url_google = "https://docs.google.com/presentation/d/"
       
-    var url = url_google + sheet_id + "/export?format=pdf&size=7&fzr=true&portrait=false";
+    var url = url_google + file_id + "/export?format=pdf&size=7&fzr=true&portrait=false";
     var blob = UrlFetchApp.fetch(url, params).getBlob();
     blob.setName(file.getName() + ".pdf");
     
