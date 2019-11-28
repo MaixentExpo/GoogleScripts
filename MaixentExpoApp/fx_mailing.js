@@ -87,8 +87,8 @@ function fx_envoyerMessage() {
   } // endif
   
   // Historisation de l'action dans la plage LOG
-  var slog = spreadsheet.getRangeByName("LOG") != null ? spreadsheet.getRangeByName("LOG").getCell(1,1).getValue() : "";
-  if ( slog != "" ) {
+  if ( spreadsheet.getRangeByName("LOG") != null ) {
+    var slog = spreadsheet.getRangeByName("LOG").getCell(1,1).getValue();
     var strace = Utilities.formatString("%s par %s", Utilities.formatDate(new Date(), spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss"), Session.getActiveUser().getEmail());
     if ( slog != "") slog += "\n";
     slog += strace;
