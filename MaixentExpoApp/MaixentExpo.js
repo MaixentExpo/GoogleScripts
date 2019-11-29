@@ -3,6 +3,8 @@
  * Maixent.Expo@gmail.com
  */
 
+
+
  /**
  * Présente une date sous la forme "12 avril 2019"
  * var maDate = new Date();
@@ -155,12 +157,14 @@ function fx_SpreadsheetToExcel(sheet_id){
   var blob = null;
   
   try {
-    var spreadsheet = null;
-    if ( sheet_id.indexOf("https") > -1 )
-      spreadsheet = SpreadsheetApp.openByUrl(sheet_id);
-    else
-      spreadsheet = SpreadsheetApp.openById(sheet_id);
-    var url = "https://docs.google.com/spreadsheets/d/" + sheet_id + "/export?format=xlsx";
+    var file_id = sheet_id;
+    if ( sheet_id.indexOf("https") > -1 ) {
+      const regex = /.*\/d\/(.*)\/.*/g;
+      file_id = regex.exec(sheet_id)[1];
+    } // endif
+
+    spreadsheet = SpreadsheetApp.openById(file_id);
+    var url = "https://docs.google.com/spreadsheets/d/" + file_id + "/export?format=xlsx";
     var params = {
       method      : "get",
       headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},

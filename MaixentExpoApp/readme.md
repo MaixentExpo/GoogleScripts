@@ -9,3 +9,33 @@
     clasp versions
     clasp pull
     clasp push
+
+## Déclarations des applications utilisatrices
+
+### appscript.json
+```json
+{
+  "timeZone": "Europe/Paris",
+  "dependencies": {
+    "libraries": [{
+      "userSymbol": "MaixentExpoApp",
+      "libraryId": "1jhMQC2ecQ90hLSQx5hrgo6rVq_DqHfO_3i2lYH1JmMteRXb4S5GJ5DxN",
+      "version": "10",
+      "developmentMode": true
+    }]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "oauthScopes": []
+}
+```
+
+### Exemples d'appel
+```javascript
+function envoyerMessage() {
+    MaixentExpoApp.fx_envoyerMessage();
+}
+function echangeAdresses() {
+    MaixentExpoApp.mailing_echangeAdresses();
+}
+```
+
