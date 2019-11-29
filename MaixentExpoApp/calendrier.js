@@ -1,16 +1,3 @@
-/*
-Initialisation du calendrier
-Préalable :
-- copier coller la feuille N-1 dans N
-- mettre une * dans la 1ère cellule
-*/
-function onOpen() {
-  var ui = SpreadsheetApp.getUi();
-  // Or DocumentApp or FormApp.
-  ui.createMenu('Macros')
-      .addItem('Initialiser le calendrier (si * en A1)', 'InitialiserLeCalendrier')
-      .addToUi();
-}
 
 function InitialiserLeCalendrier() {
   // ATTENTION : fonction qui sera exécutée sur la feuille courante

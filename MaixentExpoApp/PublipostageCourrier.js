@@ -69,7 +69,7 @@ function publipostageCourrier(sheetId, sheetName, filterName, filterValue) {
     // Recherche des colonnes dans le document et fusion des données
     for( var key in iCols) {
       sCell = ("" + sDatas[iRow][iCols[key]]).trim();     
-      oDiapoCibles[iDiapo].replaceAllText("{$date}", frenchDate(new Date()));
+      oDiapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
       oDiapoCibles[iDiapo].replaceAllText("{" + key + "}", sCell)
     } // endfor key
     iDiapo++;
@@ -77,15 +77,3 @@ function publipostageCourrier(sheetId, sheetName, filterName, filterValue) {
   oDiaporamaCible.saveAndClose();
 }
 
-/**
- * Présente une date sous la forme "12 avril 2019"
- * var maDate = new Date();
- * var maDateFrench = frenchDate(maDate)
- * @param {*} date 
- */
-function frenchDate(date) {
-  var month = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  var m = month[date.getMonth()];
-  var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
-  return dateStringFr
-}
