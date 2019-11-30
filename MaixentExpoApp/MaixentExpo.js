@@ -96,8 +96,8 @@ function fx_envoyerMessage() {
   // Recup des champs dans la feuille courante
   var spreadsheet = SpreadsheetApp.getActive();
   var to = spreadsheet.getRangeByName("TO").getCell(1,1).getValue();
-  var copy = spreadsheet.getRangeByName("COPY").getCell(1,1).getValue();
-  var cc = spreadsheet.getRangeByName("CC").getCell(1,1).getValue();
+  var cc = spreadsheet.getRangeByName("COPY").getCell(1,1).getValue();
+  var bcc = spreadsheet.getRangeByName("CC").getCell(1,1).getValue();
   var replyTo = spreadsheet.getRangeByName("REPLYTO").getCell(1,1).getValue();
   var subject = spreadsheet.getRangeByName("SUBJECT").getCell(1,1).getValue();
   var richText = spreadsheet.getRangeByName("BODY").getCell(1,1).getRichTextValue();
@@ -125,8 +125,8 @@ function fx_envoyerMessage() {
     MailApp.sendEmail({
       replyTo: replyTo,
       to: to,
-      copy: copy,
       cc: cc,
+      bcc: bcc,
       subject: subject,
       htmlBody: html,
       attachments: blobs
@@ -135,8 +135,8 @@ function fx_envoyerMessage() {
     MailApp.sendEmail({
       replyTo: replyTo,
       to: to,
-      copy: copy,
       cc: cc,
+      bcc: bcc,
       subject: subject,
       htmlBody: html
     });
@@ -145,7 +145,10 @@ function fx_envoyerMessage() {
   // Historisation de l'action dans la plage LOG
   if ( spreadsheet.getRangeByName("LOG") != null ) {
     var slog = spreadsheet.getRangeByName("LOG").getCell(1,1).getValue();
-    var strace = Utilities.formatString("%s par %s", Utilities.formatDate(new Date(), spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss"), Session.getActiveUser().getEmail());
+    var strace = Utilities.formatString("%s par %s", 
+      Utilities.formatDate(new Date(),
+        spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss"),
+      Session.getActiveUser().getEmail());
     slog = strace + "\n" + slog;
     spreadsheet.getRangeByName("LOG").setValue(slog);
   }

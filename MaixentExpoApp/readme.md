@@ -34,7 +34,7 @@
 function envoyerMessage() {
     MaixentExpoApp.fx_envoyerMessage();
 }
-function echangeAdresses() {
+function echangerAdresses() {
     MaixentExpoApp.mailing_echangeAdresses();
 }
 ```
