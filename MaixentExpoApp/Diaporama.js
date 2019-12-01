@@ -51,7 +51,7 @@ function createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
   iLastRow = sValues.length;
   var reFilter = new RegExp(filterValue, 'g');
   for (iRow=1; iRow < iLastRow; iRow++) {   
-    if ( sValues[iRow][iCols[filterName]].match(reFilter, 'g') != null ) {
+    if ( ("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null ) {
       sDatas.push(sValues[iRow]);
     } // endif
   } // endfor
@@ -95,7 +95,7 @@ function frenchDate(date) {
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
  */
-function createDiaporamaFromSlide24(sheetId, sheetName, filterName, filterValue) {
+function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filterValue) {
   var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
   var spreadsheet = sheetId.length > 15 ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.openById(properties.getProperty(sheetId));
@@ -135,7 +135,7 @@ function createDiaporamaFromSlide24(sheetId, sheetName, filterName, filterValue)
   iLastRow = sValues.length;
   var reFilter = new RegExp(filterValue, 'g');
   for (iRow=1; iRow < iLastRow; iRow++) {   
-    if ( sValues[iRow][iCols[filterName]].match(reFilter, 'g') != null ) {
+    if ( ("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null ) {
       sDatas.push(sValues[iRow]);
     } // endif
   } // endfor
@@ -182,7 +182,7 @@ function createDiaporamaFromSlide24(sheetId, sheetName, filterName, filterValue)
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
  */
-function publipostageBadge24(sheetId, sheetName, filterName, filterValue) {
+function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) {
   var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
   var spreadsheet = SpreadsheetApp.openById(sheetId);
