@@ -11,10 +11,9 @@
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
  */
-function createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
-  var properties = PropertiesService.getScriptProperties();
+function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
   // Ouverture de la feuille
-  var spreadsheet = sheetId.length > 15 ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.openById(properties.getProperty(sheetId));
+  var spreadsheet = SpreadsheetApp.openById(sheetId);
   var sheet = spreadsheet.getSheetByName(sheetName)
   var iLastCol = sheet.getLastColumn()
   var iLastRow = sheet.getLastRow()
@@ -68,7 +67,7 @@ function createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
     // Recherche des colonnes dans le document et fusion des données
     for( var key in iCols) {
       sCell = ("" + sDatas[iRow][iCols[key]]).trim();     
-      oDiapoCibles[iDiapo].replaceAllText("{$date}", frenchDate(new Date()));
+      oDiapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
       oDiapoCibles[iDiapo].replaceAllText("{" + key + "}", sCell)
     } // endfor key
     iDiapo++;
@@ -76,7 +75,7 @@ function createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
   oDiaporamaCible.saveAndClose();
 }
 
-function frenchDate(date) {
+function fx_fx_frenchDate(date) {
   var month = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
   var m = month[date.getMonth()];
   var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
@@ -96,9 +95,8 @@ function frenchDate(date) {
  * filterValue : expression régulière de filtrage sur la colonne
  */
 function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filterValue) {
-  var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
-  var spreadsheet = sheetId.length > 15 ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.openById(properties.getProperty(sheetId));
+  var spreadsheet = SpreadsheetApp.openById(sheetId);
   var sheet = spreadsheet.getSheetByName(sheetName)
   var iLastCol = sheet.getLastColumn()
   var iLastRow = sheet.getLastRow()
@@ -157,7 +155,7 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
       for (var iCol=1; iCol<3; iCol++ ) {
         sKey = "{" + key + iLigne + iCol + "}"; 
         oDiapoCibles[iDiapo].replaceAllText(sKey, sCell);
-        oDiapoCibles[iDiapo].replaceAllText("{$date}", frenchDate(new Date()));
+        oDiapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
       } // endfor
     } // endfor key
     iLigne++;
@@ -183,7 +181,6 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
  * filterValue : expression régulière de filtrage sur la colonne
  */
 function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) {
-  var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
   var spreadsheet = SpreadsheetApp.openById(sheetId);
   var sheet = spreadsheet.getSheetByName(sheetName)
@@ -244,7 +241,7 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
       for (var iCol=1; iCol<3; iCol++ ) {
         sKey = "{" + key + iLigne + iCol + "}"; 
         oDiapoCibles[iDiapo].replaceAllText(sKey, sCell);
-        oDiapoCibles[iDiapo].replaceAllText("{$date}", frenchDate(new Date()));
+        oDiapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
       } // endfor
     } // endfor key
     iLigne++;
