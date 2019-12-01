@@ -8,10 +8,9 @@
  * Les paramètres de la fonction :
  * sheetId     : Id du tableur
  * sheetName   : nom de la feuille qui contient les données du tableur
- * filterName  : nom de la colonne sur laquelle le filtre sera effectué
- * filterValue : expression régulière de filtrage sur la colonne
+ * IndexName   : nom de la colonne qui contient le n° des stands
  */
-function publipostageBadge24(sheetId, sheetName, filterName, filterValue) {
+function stands_grand_hall_fusionEmplacements(sheetId, sheetName, indexName) {
   var properties = PropertiesService.getScriptProperties();
   // Ouverture de la feuille
   var spreadsheet = SpreadsheetApp.openById(sheetId);
@@ -33,6 +32,14 @@ function publipostageBadge24(sheetId, sheetName, filterName, filterValue) {
     } // endif
   } // endfor
 
+  // On ne prendra que les lignes qui correspondent au critère filterName filterValue
+  var sDatas = [];
+  iLastRow = sValues.length;
+  for (iRow=1; iRow < iLastRow; iRow++) {   
+      sDatas.push(sValues[iRow]);
+  } // endfor
+  iLastRow = sDatas.length;
+
   // Récupération de la diapo Modèle
   var fileModele = DriveApp.getFileById(SlidesApp.getActivePresentation().getId());
   // Création du Diaporama en sortie
@@ -46,54 +53,53 @@ function publipostageBadge24(sheetId, sheetName, filterName, filterValue) {
   var oDiaporamaCible = SlidesApp.openById(fileCopy.getId());
   var oDiapoCibles = oDiaporamaCible.getSlides();
   
-  // On ne prend que les lignes qui correspondent au critère filterName filterValue
-  var sDatas = [];
-  iLastRow = sValues.length;
-  var reFilter = new RegExp(filterValue, 'g');
-  for (iRow=1; iRow < iLastRow; iRow++) {   
-    if ( sValues[iRow][iCols[filterName]].match(reFilter, 'g') != null ) {
-      sDatas.push(sValues[iRow]);
-    } // endif
-  } // endfor
-  iLastRow = sDatas.length;
-  // duplication de la 1ère diapo autant que d'enregistrement / 4
-  for (iRow=4; iRow < iLastRow; iRow += 4) {   
-    oDiaporamaCible.appendSlide(oDiapoCibles[0]);
-  } // endfor
-
-  // OK, maintenant on fusionne les données dans les diapos
-  oDiapoCibles = oDiaporamaCible.getSlides();
-  var iLigne = 1;
-  var iDiapo = 0;
+  // OK, maintenant on fusionne les données dans la diapo cible
   var sKey = "";
+  var sIndexValue;
+  // parcours des données
   for(iRow=0; iRow<iLastRow; iRow++) {
-    // Recherche des colonnes dans le document et fusion des données
+    // Parcours des colonnes du tableur et fusion des données dans le slide
     for( var key in iCols) {
+      sIndexValue = ("" + sDatas[iRow][iCols[indexName]]).trim();
+      sKey = "{" + key + "_" + sIndexValue + "}"; 
       sCell = ("" + sDatas[iRow][iCols[key]]).trim();
-      for (var iCol=1; iCol<3; iCol++ ) {
-        sKey = "{" + key + iLigne + iCol + "}"; 
-        oDiapoCibles[iDiapo].replaceAllText(sKey, sCell);
-        oDiapoCibles[iDiapo].replaceAllText("{$date}", frenchDate(new Date()));
-      } // endfor
+      oDiapoCibles[0].replaceAllText(sKey, sCell);
+      oDiapoCibles[0].replaceAllText("{$date}", fx_frenchDate(new Date()));
     } // endfor key
-    iLigne++;
-    if ( iLigne > 4 ) {
-      iDiapo++;
-      iLigne=1;
+  } // endfor row tableur
+  // Signalement des emplacements vides et coloriage du fond des emplacements
+  var shapes = oDiapoCibles[0].getShapes();
+  var countShapes = shapes.length; 
+  for ( var iShape=0; iShape < countShapes; iShape++) {
+    var tt = shapes[iShape].getText().asString();
+    if ( tt.indexOf("{") != -1 ) {
+      // emplacement vide
+      shapes[iShape].getFill().setTransparent();
+      var num = tt.match("{.*_(.*)}");
+      if ( num ) {
+        shapes[iShape].getText().setText(" " + num[1] + "\u00a0");
+      } 
+    } else {
+      // emplacement occupé de type "Viticulture" ou "Gastronomie"
+      var inscr = tt.match(/\((.*)\)/);
+      if ( inscr ) {
+        // recherche de l'emplacement dans le tableur
+        for (iRow=0; iRow<iLastRow; iRow++) {
+          var ss = sDatas[iRow][iCols["INSCR"]].toString()
+          if ( inscr[1] == ss ) {
+            var secteur = sDatas[iRow][iCols["Secteur"]]
+            if ( secteur == "Viticulture" ) {
+              // stand Viticulture
+              shapes[iShape].getFill().setSolidFill("#ead1dc") // magenta clair 3
+            } else {
+              // stand Gastronomie
+              shapes[iShape].getFill().setSolidFill("#fce5cd") // orange clair 3
+            } // endif
+          } // endif inscr
+        } // end for row
+      } // endif inscr
     } // endif
-  } // endfor tableur
+  }
+  
   oDiaporamaCible.saveAndClose();
-}
-
-/**
- * Présente une date sous la forme "12 avril 2019"
- * var maDate = new Date();
- * var maDateFrench = frenchDate(maDate)
- * @param {*} date 
- */
-function frenchDate(date) {
-  var month = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  var m = month[date.getMonth()];
-  var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
-  return dateStringFr
 }
