@@ -20,7 +20,7 @@
     "libraries": [{
       "userSymbol": "MaixentExpoApp",
       "libraryId": "1jhMQC2ecQ90hLSQx5hrgo6rVq_DqHfO_3i2lYH1JmMteRXb4S5GJ5DxN",
-      "version": "10",
+      "version": "11",
       "developmentMode": true
     }]
   },
