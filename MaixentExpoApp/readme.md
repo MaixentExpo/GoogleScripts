@@ -12,6 +12,16 @@
 
 ## Déclarations des applications utilisatrices
 
+### Code.js
+```javascript
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Foire Expo')
+      .addItem('Action 1', 'fonction1')
+      .addToUi();
+}
+```
+
 ### appscript.json
 ```json
 {

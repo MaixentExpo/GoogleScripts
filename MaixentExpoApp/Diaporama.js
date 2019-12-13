@@ -252,3 +252,31 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
 }
+
+function diapoSommaire() {
+  var presentation = SlidesApp.getActivePresentation()
+  var slides = presentation.getSlides()
+  var qSlides = slides.length
+  
+  for (var iSlide=0; iSlide<qSlides; iSlide++ ) {
+    var slide = slides[iSlide];
+    var elements = slide.pageElements;
+    for (var iElement = 0; iElement < elements.length; iElement++) {
+      if (elements[iElement].shape && elements[iElement].shape.placeholder
+          && (elements[iElement].shape.placeholder.type == 'TITLE'
+              || elements[iElement].shape.placeholder.type == 'CENTERED_TITLE')) {
+        var texts = elements[iElement].shape.text.textElements;
+        var shapeText = "";
+        for (var k = 0; k < texts.length; k++) {
+          if (texts[k].autoText) {
+             shapeText += texts[k].autoText.content;
+          }
+          if (texts[k].textRun) {
+             shapeText += texts[k].textRun.content;
+          }
+        }
+        Logger.log(shapeText);
+      }
+    }
+  } 
+}
