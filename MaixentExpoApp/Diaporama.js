@@ -253,20 +253,38 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   oDiaporamaCible.saveAndClose();
 }
 
-function diapoSommaire() {
+/**
+ * diapoSommaire
+ * !!! il manque le n° de la diapo
+ * !!! il faudrait aussi gérer des sauts de colonnes
+ * @param {String} fontFamily 
+ * @param {String} macroName 
+ */
+function diapoSommaire(fontFamily, macroName) {
   var presentation = SlidesApp.getActivePresentation()
   var slides = presentation.getSlides()
   var qslides = slides.length
+  var sommaire = ""
   
   for (var islide=0; islide<qslides; islide++ ) {
     var slide = slides[islide]
-    var elements = slide.getPageElements()
-    var qelements = elements.length
-    for (var ielement = 0; ielement < qelements; ielement++) {
-      var textRange = elements[ielement]
-      var title = textRange.getTitle();
-      Logger.log(title);
-    }
-  } 
-}
-
+    var shapes = slide.getShapes()
+    var qshapes = shapes.length
+    for (var i = 0; i < qshapes; i++) {
+      var shape = shapes[i]
+      if ( shape.getShapeType() == SlidesApp.ShapeType.TEXT_BOX ) {
+        var textRange = shape.getText()
+        if ( textRange.getTextStyle().getFontFamily() == fontFamily ) {
+          var title = shape.getText().asRenderedString()
+          sommaire += title + ""
+          Logger.log(title)
+        } // endif
+      }
+      if ( shape.getPlaceholderType() == SlidesApp.PlaceholderType.SLIDE_NUMBER ) {
+        var pageNumber = shape.getText()
+        Logger.log(pageNumber)
+      } // endif
+    } // endfor shapes
+  } // endfor slides
+//  presentation.replaceAllText("{" + macroName + "}", sommaire)
+} // end function diapoSommaire
