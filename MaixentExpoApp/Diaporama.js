@@ -253,7 +253,7 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   oDiaporamaCible.saveAndClose();
 }
 
-**
+/**
  * diapoSommaire
  */
 function diapoSommaire() {
