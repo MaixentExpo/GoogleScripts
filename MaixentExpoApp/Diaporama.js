@@ -25,9 +25,9 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
   var sCell = "";
   var iRow = 0;
   var iCol;
-  for(iCol=0; iCol<=iLastCol; iCol++) {
+  for (iCol = 0; iCol <= iLastCol; iCol++) {
     sCell = ("" + sValues[iRow][iCol]).trim();
-    if ( sCell != "" ) {
+    if (sCell != "") {
       iCols[sCell] = iCol;
     } // endif
   } // endfor
@@ -36,7 +36,7 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
   var fileModele = DriveApp.getFileById(SlidesApp.getActivePresentation().getId());
   // Création du Diaporama en sortie
   var sCopyName = ""
-  if ( fileModele.getName().match(" Modèle") ) {
+  if (fileModele.getName().match(" Modèle")) {
     sCopyName = fileModele.getName().replace(" Modèle", " Pub");
   } else {
     sCopyName = fileModele.getName() + "- Pub";
@@ -44,29 +44,29 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
   var fileCopy = fileModele.makeCopy(sCopyName);
   var oDiaporamaCible = SlidesApp.openById(fileCopy.getId());
   var oDiapoCibles = oDiaporamaCible.getSlides();
-  
+
   // On ne prend que les lignes qui correspondent au critère filterName filterValue
   var sDatas = [];
   iLastRow = sValues.length;
   var reFilter = new RegExp(filterValue, 'g');
-  for (iRow=1; iRow < iLastRow; iRow++) {   
-    if ( ("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null ) {
+  for (iRow = 1; iRow < iLastRow; iRow++) {
+    if (("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null) {
       sDatas.push(sValues[iRow]);
     } // endif
   } // endfor
   iLastRow = sDatas.length;
   // duplication de la 1ère diapo autant que d'enregistrement-1
-  for (iRow=1; iRow < iLastRow; iRow++) {   
+  for (iRow = 1; iRow < iLastRow; iRow++) {
     oDiaporamaCible.appendSlide(oDiapoCibles[0]);
   } // endfor
 
   // OK, maintenant on fusionne les données dans les diapos
   oDiapoCibles = oDiaporamaCible.getSlides();
   var iDiapo = 0;
-  for(iRow=0; iRow<iLastRow; iRow++) {
+  for (iRow = 0; iRow < iLastRow; iRow++) {
     // Recherche des colonnes dans le document et fusion des données
-    for( var key in iCols) {
-      sCell = ("" + sDatas[iRow][iCols[key]]).trim();     
+    for (var key in iCols) {
+      sCell = ("" + sDatas[iRow][iCols[key]]).trim();
       oDiapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
       oDiapoCibles[iDiapo].replaceAllText("{" + key + "}", sCell)
     } // endfor key
@@ -76,7 +76,7 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
 }
 
 function fx_fx_frenchDate(date) {
-  var month = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  var month = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   var m = month[date.getMonth()];
   var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
   return dateStringFr
@@ -108,9 +108,9 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
   var sCell = "";
   var iRow = 0;
   var iCol;
-  for(iCol=0; iCol<iLastCol; iCol++) {
+  for (iCol = 0; iCol < iLastCol; iCol++) {
     sCell = ("" + sValues[iRow][iCol]).trim();
-    if ( sCell != "" ) {
+    if (sCell != "") {
       iCols[sCell] = iCol;
     } // endif
   } // endfor
@@ -119,7 +119,7 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
   var fileModele = DriveApp.getFileById(SlidesApp.getActivePresentation().getId());
   // Création du Diaporama en sortie
   var sCopyName = ""
-  if ( fileModele.getName().match(" Modèle") ) {
+  if (fileModele.getName().match(" Modèle")) {
     sCopyName = fileModele.getName().replace(" Modèle", " Pub");
   } else {
     sCopyName = fileModele.getName() + "- Pub";
@@ -127,19 +127,19 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
   var fileCopy = fileModele.makeCopy(sCopyName);
   var oDiaporamaCible = SlidesApp.openById(fileCopy.getId());
   var oDiapoCibles = oDiaporamaCible.getSlides();
-  
+
   // On ne prend que les lignes qui correspondent au critère filterName filterValue
   var sDatas = [];
   iLastRow = sValues.length;
   var reFilter = new RegExp(filterValue, 'g');
-  for (iRow=1; iRow < iLastRow; iRow++) {   
-    if ( ("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null ) {
+  for (iRow = 1; iRow < iLastRow; iRow++) {
+    if (("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null) {
       sDatas.push(sValues[iRow]);
     } // endif
   } // endfor
   iLastRow = sDatas.length;
   // duplication de la 1ère diapo autant que d'enregistrement / 4
-  for (iRow=4; iRow < iLastRow; iRow += 4) {   
+  for (iRow = 4; iRow < iLastRow; iRow += 4) {
     oDiaporamaCible.appendSlide(oDiapoCibles[0]);
   } // endfor
 
@@ -148,20 +148,20 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
   var iLigne = 1;
   var iDiapo = 0;
   var sKey = "";
-  for(iRow=0; iRow<iLastRow; iRow++) {
+  for (iRow = 0; iRow < iLastRow; iRow++) {
     // Recherche des colonnes dans le document et fusion des données
-    for( var key in iCols) {
+    for (var key in iCols) {
       sCell = ("" + sDatas[iRow][iCols[key]]).trim();
-      for (var iCol=1; iCol<3; iCol++ ) {
-        sKey = "{" + key + iLigne + iCol + "}"; 
+      for (var iCol = 1; iCol < 3; iCol++) {
+        sKey = "{" + key + iLigne + iCol + "}";
         oDiapoCibles[iDiapo].replaceAllText(sKey, sCell);
         oDiapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
       } // endfor
     } // endfor key
     iLigne++;
-    if ( iLigne > 4 ) {
+    if (iLigne > 4) {
       iDiapo++;
-      iLigne=1;
+      iLigne = 1;
     } // endif
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
@@ -194,9 +194,9 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   var sCell = "";
   var iRow = 0;
   var iCol;
-  for(iCol=0; iCol<iLastCol; iCol++) {
+  for (iCol = 0; iCol < iLastCol; iCol++) {
     sCell = ("" + sValues[iRow][iCol]).trim();
-    if ( sCell != "" ) {
+    if (sCell != "") {
       iCols[sCell] = iCol;
     } // endif
   } // endfor
@@ -205,7 +205,7 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   var fileModele = DriveApp.getFileById(SlidesApp.getActivePresentation().getId());
   // Création du Diaporama en sortie
   var sCopyName = ""
-  if ( fileModele.getName().match(" Modèle") ) {
+  if (fileModele.getName().match(" Modèle")) {
     sCopyName = fileModele.getName().replace(" Modèle", " Pub");
   } else {
     sCopyName = fileModele.getName() + "- Pub";
@@ -213,19 +213,19 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   var fileCopy = fileModele.makeCopy(sCopyName);
   var oDiaporamaCible = SlidesApp.openById(fileCopy.getId());
   var oDiapoCibles = oDiaporamaCible.getSlides();
-  
+
   // On ne prend que les lignes qui correspondent au critère filterName filterValue
   var sDatas = [];
   iLastRow = sValues.length;
   var reFilter = new RegExp(filterValue, 'g');
-  for (iRow=1; iRow < iLastRow; iRow++) {   
-    if ( sValues[iRow][iCols[filterName]].match(reFilter, 'g') != null ) {
+  for (iRow = 1; iRow < iLastRow; iRow++) {
+    if (sValues[iRow][iCols[filterName]].match(reFilter, 'g') != null) {
       sDatas.push(sValues[iRow]);
     } // endif
   } // endfor
   iLastRow = sDatas.length;
   // duplication de la 1ère diapo autant que d'enregistrement / 4
-  for (iRow=4; iRow < iLastRow; iRow += 4) {   
+  for (iRow = 4; iRow < iLastRow; iRow += 4) {
     oDiaporamaCible.appendSlide(oDiapoCibles[0]);
   } // endfor
 
@@ -234,57 +234,102 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   var iLigne = 1;
   var iDiapo = 0;
   var sKey = "";
-  for(iRow=0; iRow<iLastRow; iRow++) {
+  for (iRow = 0; iRow < iLastRow; iRow++) {
     // Recherche des colonnes dans le document et fusion des données
-    for( var key in iCols) {
+    for (var key in iCols) {
       sCell = ("" + sDatas[iRow][iCols[key]]).trim();
-      for (var iCol=1; iCol<3; iCol++ ) {
-        sKey = "{" + key + iLigne + iCol + "}"; 
+      for (var iCol = 1; iCol < 3; iCol++) {
+        sKey = "{" + key + iLigne + iCol + "}";
         oDiapoCibles[iDiapo].replaceAllText(sKey, sCell);
         oDiapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
       } // endfor
     } // endfor key
     iLigne++;
-    if ( iLigne > 4 ) {
+    if (iLigne > 4) {
       iDiapo++;
-      iLigne=1;
+      iLigne = 1;
     } // endif
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
 }
 
-/**
+**
  * diapoSommaire
- * !!! il manque le n° de la diapo
- * !!! il faudrait aussi gérer des sauts de colonnes
- * @param {String} fontFamily 
- * @param {String} macroName 
  */
-function diapoSommaire(fontFamily, macroName) {
-  var presentation = SlidesApp.getActivePresentation()
-  var slides = presentation.getSlides()
-  var qslides = slides.length
-  var sommaire = ""
-  
-  for (var islide=0; islide<qslides; islide++ ) {
-    var slide = slides[islide]
-    var shapes = slide.getShapes()
-    var qshapes = shapes.length
-    for (var i = 0; i < qshapes; i++) {
-      var shape = shapes[i]
-      if ( shape.getShapeType() == SlidesApp.ShapeType.TEXT_BOX ) {
-        var textRange = shape.getText()
-        if ( textRange.getTextStyle().getFontFamily() == fontFamily ) {
-          var title = shape.getText().asRenderedString()
-          sommaire += title + ""
-          Logger.log(title)
-        } // endif
+function diapoSommaire() {
+  var presentation = SlidesApp.getActivePresentation();
+  // Retrieve slides as images
+  var id = presentation.getId();
+  //var accessToken = ScriptApp.getOAuthToken();
+  // Recup de l'id de chaque dispo
+  var pageObjectIds = presentation.getSlides().map(function (e) { return e.getObjectId() });
+  // construction des Urls
+  // url: "https://slides.googleapis.com/v1/presentations/" + id + "/pages/" + pageObjectId + "/thumbnail?access_token=" + accessToken,
+  var reqUrls = pageObjectIds.map(function (pageObjectId) {
+    return {
+      method: "get",
+      url: "https://slides.googleapis.com/v1/presentations/" + id + "/pages/" + pageObjectId + "/thumbnail",
+      headers: { Authorization: "Bearer " + ScriptApp.getOAuthToken() },
+      muteHttpExceptions: true
+    };
+  });
+  // Soumission des Urls
+  var reqBlobs = UrlFetchApp.fetchAll(reqUrls).map(function (e) {
+    var r = JSON.parse(e);
+    return {
+      method: "get",
+      url: r.contentUrl
+    };
+  });
+  var reqClean = [];
+  for (var i=0; i<reqBlobs.length; i++) {
+    if ( typeof reqBlobs[i].url === 'undefined' ) {
+      ;
+    } else {
+      reqClean.push(reqBlobs[i]);
+    }
+  } // endfor
+  // Recup des Images générées dans blobs
+  var blobs = UrlFetchApp.fetchAll(reqClean).map(function (e) {
+    return e.getBlob()
+  });
+
+  // Ajout de slides Sommaire
+  var col = 5; // Number of columns
+  var row = 4; // Number of rows
+  var wsize = 130; // Size of width of each image (pixels)
+  var sep = 5; // Space of each image (pixels)
+
+  var ph = presentation.getPageHeight(); // 540 px
+  var pw = presentation.getPageWidth();  // 720 px
+  var leftOffset = (pw - ((wsize * col) + (sep * (col - 1)))) / 2;
+  if (leftOffset < 0) throw new Error("Images are sticking out from a slide.");
+  var len = col * row;
+  var loops = Math.ceil(blobs.length / (col * row));
+  for (var loop = 0; loop < loops; loop++) {
+    var ns = presentation.insertSlide(loop);
+    var topOffset, top;
+    var left = leftOffset;
+    for (var i = len * loop; i < len + (len * loop); i++) {
+      if (i === blobs.length) break;
+      var image = ns.insertImage(blobs[i]);
+      var w = image.getWidth();
+      var h = image.getHeight();
+      var hsize = h * wsize / w;
+      if (i === 0 || i % len === 0) {
+        topOffset = (ph - ((hsize * row) + sep)) / 2;
+        if (topOffset < 0) throw new Error("Images are sticking out from a slide.");
+        top = topOffset;
       }
-      if ( shape.getPlaceholderType() == SlidesApp.PlaceholderType.SLIDE_NUMBER ) {
-        var pageNumber = shape.getText()
-        Logger.log(pageNumber)
-      } // endif
-    } // endfor shapes
-  } // endfor slides
-//  presentation.replaceAllText("{" + macroName + "}", sommaire)
+      image.setWidth(wsize).setHeight(hsize).setTop(top).setLeft(left).getObjectId();
+      //if (i === col - 1 + (loop * len)) {
+      if ( loop % col === 0 ) {
+        top = topOffset + hsize + sep;
+        left = leftOffset;
+      } else {
+        left += wsize + sep;
+      }
+    }
+  }
+  presentation.saveAndClose();
 } // end function diapoSommaire
