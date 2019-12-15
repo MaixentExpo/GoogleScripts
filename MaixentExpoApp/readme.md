@@ -10,6 +10,9 @@
     clasp pull
     clasp push
 
+## Activation de API Google Apps Script
+https://script.google.com/home/usersettings
+
 ## Déclarations des applications utilisatrices
 
 ### Code.js
