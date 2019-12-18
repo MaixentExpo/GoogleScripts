@@ -73,13 +73,8 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
     iDiapo++;
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
-}
 
-function fx_fx_frenchDate(date) {
-  var month = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-  var m = month[date.getMonth()];
-  var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
-  return dateStringFr
+  return oDiaporamaCible.getId();
 }
 
 /**
@@ -165,6 +160,8 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
     } // endif
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
+
+  return oDiaporamaCible.getId();
 }
 
 /**
@@ -251,4 +248,6 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
     } // endif
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
+
+  return oDiaporamaCible.getId();
 }

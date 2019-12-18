@@ -184,18 +184,18 @@ function fx_SpreadsheetToExcel(sheet_id){
 
 /**
  * Conversion fichier Google Drive en PDF
- * @param {String} sheet_id url du fichier ou seulement l'id
+ * @param {String} FileId url du fichier ou seulement l'id
  * @param {String} parametres "&portrait=false" par exemple
  * @return {Blob} Objet du fichier converti
 **/
-function fx_FileToPdf(sheet_id, parametres){
+function fx_FileToPdf(FileId, parametres){
   // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
   var blob = null;
   try {
-    var file_id = sheet_id;
-    if ( sheet_id.indexOf("https") > -1 ) {
+    var file_id = FileId;
+    if ( FileId.indexOf("https") > -1 ) {
       const regex = /.*\/d\/(.*)\/.*/g;
-      file_id = regex.exec(sheet_id)[1];
+      file_id = regex.exec(FileId)[1];
     } // endif
     var file = DriveApp.getFileById(file_id);
     var params = {
@@ -215,6 +215,19 @@ function fx_FileToPdf(sheet_id, parametres){
     Logger.log(f.toString());
   }
   return blob;
+}
+
+function fx_dialogCreatePdf(ui, folderId, fileId, pdfParameters) {
+  var blob = fx_FileToPdf(fileId, pdfParameters);
+  var folder = DriveApp.getFolderById(folderId);
+  var pdfFile = folder.createFile(blob);
+
+  // Display a modal dialog box with custom HtmlService content.
+  const htmlOutput = HtmlService
+    .createHtmlOutput('<p>Click to open <a href="' + pdfFile.getUrl() + '" target="_blank">' + blob.getName() + '</a></p>')
+    .setWidth(300)
+    .setHeight(80)
+  ui.showModalDialog(htmlOutput, 'Export Successful')
 }
 
 /**
