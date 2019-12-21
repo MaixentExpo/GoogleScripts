@@ -4,8 +4,8 @@
 */
 function comite_Commissions() {
   var oVar = {
-    style_bold : SpreadsheetApp.newTextStyle().setBold(true).build(),
-    style_red : SpreadsheetApp.newTextStyle().setForegroundColor("red").build()
+    style_normal : SpreadsheetApp.newTextStyle().setBold(false).build(),
+    style_red : SpreadsheetApp.newTextStyle().setForegroundColor("red").build(),
   }
   // Ouverture du tableur conteneur du script
   var spreadsheet = SpreadsheetApp.getActive();
@@ -25,6 +25,8 @@ function comite_Commissions() {
     if ( sCell == "Nom" ) iColNom = iCol;
     if ( sCell == "Commissions" ) iColCommissions = iCol;
   } // endfor
+  // Nettoyage des commissions
+  sheet.getRange(2, iColCommissions+1).clear({contentsOnly: true})
   
   // Ouverture de la feuiile COMMISSIONS
   var sheetCommissions = spreadsheet.getSheetByName("COMMISSIONS")
@@ -58,7 +60,7 @@ function comite_Commissions() {
             // Colonne responsable commission
             oStyle["start"] = sCommissions.length
           }
-          sCommissions += valuesCommissions[ir][0]  
+          sCommissions += valuesCommissions[ir][0]
           if ( ic == 1 ) {
             oStyle["end"] = sCommissions.length
             aStyles.push(oStyle)
