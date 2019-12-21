@@ -3,10 +3,6 @@
   Retourne la liste des commisions affectée au Membres
 */
 function comite_Commissions() {
-  var oVar = {
-    style_normal : SpreadsheetApp.newTextStyle().setBold(false).build(),
-    style_red : SpreadsheetApp.newTextStyle().setForegroundColor("red").build(),
-  }
   // Ouverture du tableur conteneur du script
   var spreadsheet = SpreadsheetApp.getActive();
   // Ouverture de la feuille MEMBRES
@@ -68,20 +64,20 @@ function comite_Commissions() {
         } // endif
       } // end for
     } // end for
-    sheet.getRange(iRow+1, iColCommissions+1).setRichTextValue(getRichTextBold(sCommissions, aStyles, oVar))
+    sheet.getRange(iRow+1, iColCommissions+1).setRichTextValue(getRichTextBold(sCommissions, aStyles))
     valuesMembres[iRow][iColCommissions] = sCommissions
   } // endfor
   
 } // end ComiteCommissions
 
-function getRichTextBold(textValue, aStyles, oVar) {
+function getRichTextBold(textValue, aStyles) {
   var textRich = SpreadsheetApp.newRichTextValue()
   textRich = textRich.setText(textValue)
   var oStyle = {}
   for (var i=0; i<aStyles.length; i++) {
     oStyle = aStyles[i]
-    textRich = textRich.setTextStyle(oStyle.start, oStyle.end, oVar.style_bold)
-    textRich = textRich.setTextStyle(oStyle.start, oStyle.end, oVar.style_red)
+    textRich = textRich.setTextStyle(oStyle.start, oStyle.end, SpreadsheetApp.newTextStyle().setBold(true).build())
+    textRich = textRich.setTextStyle(oStyle.start, oStyle.end, SpreadsheetApp.newTextStyle().setForegroundColor("red").build())
   }
   return textRich.build()
 }
