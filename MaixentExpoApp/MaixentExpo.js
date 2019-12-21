@@ -84,6 +84,51 @@ function fx_recupEmail(source_file_id, source_range_name, cible_range_name) {
   cell.setValue(emails);
   
 }
+/**
+ * fx_selectEmail
+ * Sélection des emails d'une colonne qui répondent au critère
+ * @param {String} source_file_id id du tableur 
+ * @param {String} source_range_name plage des emails du genre "MEMBRES!D2:D70"
+ * @param {String} cible_range_name cellule cible de la feuille courante
+ * @param {String} rangeFilter plage de valeur à tester
+ * @param {String} filterValue expression régulière "Bovins" "Vins" "Tombola|Publicité" "^((?!Adhérent).)*$"
+ */
+function fx_selectEmail(source_file_id, source_range_name, cible_range_name, rangeFilter, filterValue) {
+  var ui = SpreadsheetApp.getUi();
+  var message = "Récupérer les emails (" + filterValue + ")";
+  var yesnoConfirm = ui.alert(
+     message,
+     'Veuillez confirmer par oui ou non',
+      ui.ButtonSet.YES_NO);
+  if ( yesnoConfirm != ui.Button.YES ) return;
+  
+  // Recup emails 
+  var spreadsheet_source = SpreadsheetApp.openById(source_file_id);
+  var values = spreadsheet_source.getRangeByName(source_range_name).getValues();
+  var iLastRow = values.length;
+  var emails = "";
+  var isStart = true;
+  var reFilter = new RegExp(filterValue, 'gm');
+  var filterValues = spreadsheet_source.getRangeByName(rangeFilter).getValues();
+  for (var i=0; i<iLastRow; i++) {
+    if ( ("" + filterValues[i]).match(reFilter, 'g') == null) {
+      continue;
+    } // endif
+    if ( values[i] == "" ) 
+      continue;
+    if ( ! isStart ) {
+      emails += ", ";
+    } // end if
+    isStart = false;
+    emails += values[i];
+  } // end for
+  
+  // Copie emails dans plage EMAILS
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var cell = spreadsheet.getRange(cible_range_name);
+  cell.setValue(emails);
+}
+
 
 function fx_envoyerMessage() {
   var ui = SpreadsheetApp.getUi();
