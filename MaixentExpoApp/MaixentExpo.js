@@ -383,7 +383,13 @@ function fx_htmlStyleRtRun(richTextRun) {
  * @param {String} driveFolderId  id du répertoire drive
  */
 function fx_saveGmailAsPDF(gmailLabel, driveFolderId) { 
-    
+  var ui = SpreadsheetApp.getUi();
+  var yesnoConfirm = ui.alert(
+     "Archiver les mails ?",
+     'Veuillez confirmer par oui ou non',
+      ui.ButtonSet.YES_NO);
+  if ( yesnoConfirm != ui.Button.YES ) return;
+ 
   var threads = GmailApp.search("in:" + gmailLabel, 0, 5)
   
   if (threads.length > 0) {
@@ -436,7 +442,7 @@ function fx_saveGmailAsPDF(gmailLabel, driveFolderId) {
         } else {
           folderAttachment = folder.createFolder("pj")
         }
-        var footer = "<strong>Attachments:</strong><ul>"
+        var footer = "<strong>Pie&#768;ces jointes:</strong><ul>"
         for (var z=0; z<attachments.length; z++) {
           var file = folderAttachment.createFile(attachments[z])
           footer += "<li><a href='" + file.getUrl() + "'>" + file.getName() + "</a></li>"
@@ -446,7 +452,7 @@ function fx_saveGmailAsPDF(gmailLabel, driveFolderId) {
       
       /* Conver the Email Thread into a PDF File */
       var tempFile = DriveApp.createFile("temp.html", html, "text/html")
-      folder.createFile(tempFile.getAs("application/pdf")).setName(subject + ".pdf")
+      folder.createFile(tempFile.getAs("application/pdf")).setName("Mail - " + subject + ".pdf")
       tempFile.setTrashed(true)
       
     }
