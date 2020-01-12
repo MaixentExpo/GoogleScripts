@@ -1,0 +1,31 @@
+{
+    "timeZone": "Europe/Paris",
+    "dependencies": {},
+    "exceptionLogging": "STACKDRIVER",
+    "oauthScopes": [
+        "https://www.googleapis.com/auth/gmail.addons.current.message.metadata"
+    ],
+    "gmail": {
+        "name": "Universal Actions Only Addon",
+        "logoUrl": "http://www.foire-expo-st-maixent.com/wp-content/uploads/2018/12/logo-comite-foires.png",
+        "contextualTriggers": [
+            {
+                "unconditional": {},
+                "onTriggerFunction": "getContextualAddOn"
+            }
+        ],
+        "openLinkUrlPrefixes": [
+            "https://www.google.com"
+        ],
+        "universalActions": [
+            {
+                "text": "Open google.com",
+                "openLink": "https://www.google.com"
+            },
+            {
+                "text": "Open contact URL",
+                "runFunction": "openContactURL"
+            }
+        ]
+    }
+}
