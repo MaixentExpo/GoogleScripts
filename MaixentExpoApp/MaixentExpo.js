@@ -393,6 +393,8 @@ function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
 
   var threads = GmailApp.search("in:" + gmailLabelSource, 0, 5)
 
+  var mailsArchived = []
+
   if (threads.length > 0) {
 
     /* Google Drive folder where the Files would be saved */
@@ -430,7 +432,7 @@ function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
           html += "En copie: " + msg.getCc() + "<br />"
         if (msg.getBcc())
           html += "En copie caché: " + msg.getBcc() + "<br />"
-        html += "Date: " + msg.getDate() + "<br />"
+        html += "Date: " + Utilities.formatDate(msg.getDate(), "GMT", "dd/MM/yyyy HH:mm:ss") + "<br />"
         html += "Objet: " + msg.getSubject() + "<br />"
         html += "<hr />"
         html += msg.getBody().replace(/<img[^>]*>/g, "")
@@ -466,6 +468,12 @@ function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
       var pdf = folder.createFile(tempFile.getAs("application/pdf")).setName("Mail - " + subject + ".pdf")
       pdf.setDescription(threads[t].getId())
       tempFile.setTrashed(true)
+      mailsArchived.push(subject)
     }
+  }
+  if ( mailsArchived.length > 0 ) {
+    ui.alert("Archivage des mails", mailsArchived.toString(), ui.ButtonSet.OK)
+  } else {
+    ui.alert("Archivage des mails", "Aucun mail à archiver", ui.ButtonSet.OK)
   }
 }  
