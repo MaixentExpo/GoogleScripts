@@ -5,14 +5,14 @@
 
 
 
- /**
- * Présente une date sous la forme "12 avril 2019"
- * var maDate = new Date();
- * var maDateFrench = frenchDate(maDate)
- * @param {Date} date 
- */
+/**
+* Présente une date sous la forme "12 avril 2019"
+* var maDate = new Date();
+* var maDateFrench = frenchDate(maDate)
+* @param {Date} date 
+*/
 function fx_frenchDate(date) {
-  var month = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  var month = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
   var m = month[date.getMonth()];
   var dateStringFr = date.getDate() + ' ' + m + ' ' + date.getFullYear();
   return dateStringFr
@@ -22,32 +22,32 @@ function fx_frenchDate(date) {
  * Class Couleur
  * qui fournit un code couleur à chaque appel new_couleur()
  */
-var Couleur = function() {
-  this.couleurs = [ "#e8f5e9" // green
-                   ,"#e3f2fd" // blue
-                   ,"#fffde7" // yellow
-                   ,"#fbe9e7" // deep orange
-                   ,"#e0f7fa" // cyan
-                   ,"#f1f8e9" // light green
-                   ,"#fce4ec" // pink
-                   ,"#e1f5fe" // light blue
-                   ,"#ede7f6" // deep purple
-                   ,"#eceff1" // blue grey
-                   ,"#e8eaf6" // indigo
-                   ,"#f3e5f5" // purple
-                   ,"#f9fbe7" // lime
-                   ,"#fff3e0" // orange
-                   ,"#fff8e1" // amber
-                   ,"#efebe9" // brown
-                   ,"#e0f2f1" // teal
-                   ,"#ffebee" // red
-                   ,"#fafafa" // grey
-                  ];
+var Couleur = function () {
+  this.couleurs = ["#e8f5e9" // green
+    , "#e3f2fd" // blue
+    , "#fffde7" // yellow
+    , "#fbe9e7" // deep orange
+    , "#e0f7fa" // cyan
+    , "#f1f8e9" // light green
+    , "#fce4ec" // pink
+    , "#e1f5fe" // light blue
+    , "#ede7f6" // deep purple
+    , "#eceff1" // blue grey
+    , "#e8eaf6" // indigo
+    , "#f3e5f5" // purple
+    , "#f9fbe7" // lime
+    , "#fff3e0" // orange
+    , "#fff8e1" // amber
+    , "#efebe9" // brown
+    , "#e0f2f1" // teal
+    , "#ffebee" // red
+    , "#fafafa" // grey
+  ];
   this.iCouleur = -1;
   this.couleur = "#fafafa";
   this.new_couleur = function () {
     this.iCouleur++
-    if ( this.iCouleur >= this.couleurs.length ) {
+    if (this.iCouleur >= this.couleurs.length) {
       this.iCouleur = 0;
     } // endif
     this.couleur = this.couleurs[this.iCouleur];
@@ -57,32 +57,32 @@ var Couleur = function() {
 function fx_recupEmail(source_file_id, source_range_name, cible_range_name) {
   var ui = SpreadsheetApp.getUi(); // Same variations.
   var yesnoConfirm = ui.alert(
-     "Récupérer les emails",
-     'Veuillez confirmer par oui ou non',
-      ui.ButtonSet.YES_NO);
-  if ( yesnoConfirm != ui.Button.YES ) return;
-  
+    "Récupérer les emails",
+    'Veuillez confirmer par oui ou non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
   // Recup emails 
   var spreadsheet_source = SpreadsheetApp.openById(source_file_id);
   var values = spreadsheet_source.getRangeByName(source_range_name).getValues();
   var iLastRow = values.length;
   var emails = "";
   var isStart = true;
-  for (var i=0; i<iLastRow; i++) {
-    if ( values[i] == "" ) 
+  for (var i = 0; i < iLastRow; i++) {
+    if (values[i] == "")
       continue;
-    if ( ! isStart ) {
+    if (!isStart) {
       emails += ", ";
     } // end if
     isStart = false;
     emails += values[i];
   } // end for
-  
+
   // Copie emails dans plage EMAILS
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var cell = spreadsheet.getRange(cible_range_name);
   cell.setValue(emails);
-  
+
 }
 /**
  * fx_selectEmail
@@ -97,11 +97,11 @@ function fx_selectEmail(source_file_id, source_range_name, cible_range_name, ran
   var ui = SpreadsheetApp.getUi();
   var message = "Récupérer les emails (" + filterValue + ")";
   var yesnoConfirm = ui.alert(
-     message,
-     'Veuillez confirmer par oui ou non',
-      ui.ButtonSet.YES_NO);
-  if ( yesnoConfirm != ui.Button.YES ) return;
-  
+    message,
+    'Veuillez confirmer par oui ou non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
   // Recup emails 
   var spreadsheet_source = SpreadsheetApp.openById(source_file_id);
   var values = spreadsheet_source.getRangeByName(source_range_name).getValues();
@@ -110,19 +110,19 @@ function fx_selectEmail(source_file_id, source_range_name, cible_range_name, ran
   var isStart = true;
   var reFilter = new RegExp(filterValue, 'gm');
   var filterValues = spreadsheet_source.getRangeByName(rangeFilter).getValues();
-  for (var i=0; i<iLastRow; i++) {
-    if ( ("" + filterValues[i]).match(reFilter, 'g') == null) {
+  for (var i = 0; i < iLastRow; i++) {
+    if (("" + filterValues[i]).match(reFilter, 'g') == null) {
       continue;
     } // endif
-    if ( values[i] == "" ) 
+    if (values[i] == "")
       continue;
-    if ( ! isStart ) {
+    if (!isStart) {
       emails += ", ";
     } // end if
     isStart = false;
     emails += values[i];
   } // end for
-  
+
   // Copie emails dans plage EMAILS
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var cell = spreadsheet.getRange(cible_range_name);
@@ -133,40 +133,40 @@ function fx_selectEmail(source_file_id, source_range_name, cible_range_name, ran
 function fx_envoyerMessage() {
   var ui = SpreadsheetApp.getUi();
   var yesnoConfirm = ui.alert(
-     "Envoyer le message",
-     'Veuillez confirmer par oui ou non',
-      ui.ButtonSet.YES_NO);
-  if ( yesnoConfirm != ui.Button.YES ) return;
-  
+    "Envoyer le message",
+    'Veuillez confirmer par oui ou non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
   // Recup des champs dans la feuille courante
   var spreadsheet = SpreadsheetApp.getActive();
-  var to = spreadsheet.getRangeByName("TO").getCell(1,1).getValue();
-  var cc = spreadsheet.getRangeByName("COPY").getCell(1,1).getValue();
-  var bcc = spreadsheet.getRangeByName("CC").getCell(1,1).getValue();
-  var replyTo = spreadsheet.getRangeByName("REPLYTO").getCell(1,1).getValue();
-  var subject = spreadsheet.getRangeByName("SUBJECT").getCell(1,1).getValue();
-  var richText = spreadsheet.getRangeByName("BODY").getCell(1,1).getRichTextValue();
-  var pjSheet = spreadsheet.getRangeByName("PJ_SHEET") != null ? spreadsheet.getRangeByName("PJ_SHEET").getCell(1,1).getValue() : "";
-  var pjFile1 = spreadsheet.getRangeByName("PJ_FILE1") != null ? spreadsheet.getRangeByName("PJ_FILE1").getCell(1,1).getValue() : "";
-  var pjFile2 = spreadsheet.getRangeByName("PJ_FILE2") != null ? spreadsheet.getRangeByName("PJ_FILE2").getCell(1,1).getValue() : "";
-  var pjFile3 = spreadsheet.getRangeByName("PJ_FILE3") != null ? spreadsheet.getRangeByName("PJ_FILE3").getCell(1,1).getValue() : "";
+  var to = spreadsheet.getRangeByName("TO").getCell(1, 1).getValue();
+  var cc = spreadsheet.getRangeByName("COPY").getCell(1, 1).getValue();
+  var bcc = spreadsheet.getRangeByName("CC").getCell(1, 1).getValue();
+  var replyTo = spreadsheet.getRangeByName("REPLYTO").getCell(1, 1).getValue();
+  var subject = spreadsheet.getRangeByName("SUBJECT").getCell(1, 1).getValue();
+  var richText = spreadsheet.getRangeByName("BODY").getCell(1, 1).getRichTextValue();
+  var pjSheet = spreadsheet.getRangeByName("PJ_SHEET") != null ? spreadsheet.getRangeByName("PJ_SHEET").getCell(1, 1).getValue() : "";
+  var pjFile1 = spreadsheet.getRangeByName("PJ_FILE1") != null ? spreadsheet.getRangeByName("PJ_FILE1").getCell(1, 1).getValue() : "";
+  var pjFile2 = spreadsheet.getRangeByName("PJ_FILE2") != null ? spreadsheet.getRangeByName("PJ_FILE2").getCell(1, 1).getValue() : "";
+  var pjFile3 = spreadsheet.getRangeByName("PJ_FILE3") != null ? spreadsheet.getRangeByName("PJ_FILE3").getCell(1, 1).getValue() : "";
   // Message en Html enrichi
   var html = fx_htmlEncodeRichText(richText);
   // Envoi du message
   var blobs = [];
-  if ( pjSheet != "" ) {
+  if (pjSheet != "") {
     blobs.push(fx_SpreadsheetToExcel(pjSheet));
-  } 
-  if ( pjFile1 != "" ) {
+  }
+  if (pjFile1 != "") {
     blobs.push(fx_FileToPdf(pjFile1, "&portrait=false"));
   }
-  if ( pjFile2 != "" ) {
+  if (pjFile2 != "") {
     blobs.push(fx_FileToPdf(pjFile2, "&portrait=true"));
   }
-  if ( pjFile3 != "" ) {
+  if (pjFile3 != "") {
     blobs.push(fx_FileToPdf(pjFile3, "&portrait=true"));
   }
-  if ( blobs.length > 0 ) {
+  if (blobs.length > 0) {
     MailApp.sendEmail({
       replyTo: replyTo,
       to: to,
@@ -186,11 +186,11 @@ function fx_envoyerMessage() {
       htmlBody: html
     });
   } // endif
-  
+
   // Historisation de l'action dans la plage LOG
-  if ( spreadsheet.getRangeByName("LOG") != null ) {
-    var slog = spreadsheet.getRangeByName("LOG").getCell(1,1).getValue();
-    var strace = Utilities.formatString("%s par %s", 
+  if (spreadsheet.getRangeByName("LOG") != null) {
+    var slog = spreadsheet.getRangeByName("LOG").getCell(1, 1).getValue();
+    var strace = Utilities.formatString("%s par %s",
       Utilities.formatDate(new Date(),
         spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss"),
       Session.getActiveUser().getEmail());
@@ -200,13 +200,13 @@ function fx_envoyerMessage() {
 
 }
 
-function fx_SpreadsheetToExcel(sheet_id){
+function fx_SpreadsheetToExcel(sheet_id) {
   // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
   var blob = null;
-  
+
   try {
     var file_id = sheet_id;
-    if ( sheet_id.indexOf("https") > -1 ) {
+    if (sheet_id.indexOf("https") > -1) {
       const regex = /.*\/d\/(.*)\/.*/g;
       file_id = regex.exec(sheet_id)[1];
     } // endif
@@ -214,13 +214,13 @@ function fx_SpreadsheetToExcel(sheet_id){
     spreadsheet = SpreadsheetApp.openById(file_id);
     var url = "https://docs.google.com/spreadsheets/d/" + file_id + "/export?format=xlsx";
     var params = {
-      method      : "get",
-      headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
+      method: "get",
+      headers: { "Authorization": "Bearer " + ScriptApp.getOAuthToken() },
       muteHttpExceptions: true
     };
     var blob = UrlFetchApp.fetch(url, params).getBlob();
     blob.setName(spreadsheet.getName() + ".xlsx");
-    
+
   } catch (f) {
     Logger.log(f.toString());
   }
@@ -233,29 +233,29 @@ function fx_SpreadsheetToExcel(sheet_id){
  * @param {String} parametres "&portrait=false" par exemple
  * @return {Blob} Objet du fichier converti
 **/
-function fx_FileToPdf(FileId, parametres){
+function fx_FileToPdf(FileId, parametres) {
   // https://gist.github.com/Spencer-Easton/78f9867a691e549c9c70
   var blob = null;
   try {
     var file_id = FileId;
-    if ( FileId.indexOf("https") > -1 ) {
+    if (FileId.indexOf("https") > -1) {
       const regex = /.*\/d\/(.*)\/.*/g;
       file_id = regex.exec(FileId)[1];
     } // endif
     var file = DriveApp.getFileById(file_id);
     var params = {
-      method      : "get",
-      headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
+      method: "get",
+      headers: { "Authorization": "Bearer " + ScriptApp.getOAuthToken() },
       muteHttpExceptions: true
     };
     var url_google = "https://docs.google.com/spreadsheets/d/";
-    if ( file.getMimeType() == MimeType.GOOGLE_DOCS ) url_google = "https://docs.google.com/document/d/"
-    if ( file.getMimeType() == MimeType.GOOGLE_SLIDES ) url_google = "https://docs.google.com/presentation/d/"
-      
+    if (file.getMimeType() == MimeType.GOOGLE_DOCS) url_google = "https://docs.google.com/document/d/"
+    if (file.getMimeType() == MimeType.GOOGLE_SLIDES) url_google = "https://docs.google.com/presentation/d/"
+
     var url = url_google + file_id + "/export?format=pdf&size=7&fzr=true" + parametres;
     var blob = UrlFetchApp.fetch(url, params).getBlob();
     blob.setName(file.getName() + ".pdf");
-    
+
   } catch (f) {
     Logger.log(f.toString());
   }
@@ -379,82 +379,93 @@ function fx_htmlStyleRtRun(richTextRun) {
 
 /**
  * Archivage des mails labelisés dans un répertoire de Drive
- * @param {String} gmailLabel Label des mails à archiver
+ * @param {String} gmailLabelSource Label des mails à archiver
+ * @param {String} gmailLabelCible Label des mails archivés
  * @param {String} driveFolderId  id du répertoire drive
  */
-function fx_saveGmailAsPDF(gmailLabel, driveFolderId) { 
+function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
   var ui = SpreadsheetApp.getUi();
   var yesnoConfirm = ui.alert(
-     "Archiver les mails ?",
-     'Veuillez confirmer par oui ou non',
-      ui.ButtonSet.YES_NO);
-  if ( yesnoConfirm != ui.Button.YES ) return;
- 
-  var threads = GmailApp.search("in:" + gmailLabel, 0, 5)
-  
+    "Archiver les mails ?",
+    'Veuillez confirmer par oui ou non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
+  var threads = GmailApp.search("in:" + gmailLabelSource, 0, 5)
+
   if (threads.length > 0) {
-    
+
     /* Google Drive folder where the Files would be saved */
     var folder = DriveApp.getFolderById(driveFolderId);
+    // mémorisation des msgid déjà enregistrés dans le folder
+    var files = folder.getFiles()
+    var msgIds = []
+    while (files.hasNext()) {
+      var file = files.next();
+      msgIds.push(file.getDescription())
+    }
 
     /* Gmail Label that contains the queue */
-    var label = GmailApp.getUserLabelByName(gmailLabel)
-    
-    for (var t=0; t<threads.length; t++) {
-      
+    var labelSource = GmailApp.getUserLabelByName(gmailLabelSource)
+    var labelCible = GmailApp.getUserLabelByName(gmailLabelCible)
+
+    for (var t = 0; t < threads.length; t++) {
+      if (msgIds.indexOf(threads[t].getId()) + 1) {
+        threads[t].removeLabel(labelSource)
+        continue
+      }
+
       var msgs = threads[t].getMessages()
-      
       var html = ""
       var attachments = []
-      
+
       var subject = threads[t].getFirstMessageSubject()
-      
+
       /* Append all the threads in a message in an HTML document */
-      for (var m=0; m<msgs.length; m++) {
-        
+      for (var m = 0; m < msgs.length; m++) {
         var msg = msgs[m]
-        
         html += "De: " + msg.getFrom() + "<br />"
         html += "a&#768;: " + msg.getTo() + "<br />"
-        if ( msg.getCc() ) 
+        if (msg.getCc())
           html += "En copie: " + msg.getCc() + "<br />"
-        if ( msg.getBcc() ) 
+        if (msg.getBcc())
           html += "En copie caché: " + msg.getBcc() + "<br />"
         html += "Date: " + msg.getDate() + "<br />"
         html += "Objet: " + msg.getSubject() + "<br />"
         html += "<hr />"
-        html += msg.getBody().replace(/<img[^>]*>/g,"")
+        html += msg.getBody().replace(/<img[^>]*>/g, "")
         html += "<hr />"
-        
+
         var atts = msg.getAttachments()
-        for (var a=0; a<atts.length; a++) {
+        for (var a = 0; a < atts.length; a++) {
           attachments.push(atts[a])
         }
-        threads[t].removeLabel(label);
+        threads[t].removeLabel(labelSource)
+        threads[t].addLabel(labelCible)
       }
-      
+
       /* Save the attachment files and create links in the document's footer */
       if (attachments.length > 0) {
         var folderIterator = folder.getFoldersByName("pj")
         var folderAttachment
-        if ( folderIterator.hasNext() ) {
+        if (folderIterator.hasNext()) {
           folderAttachment = folderIterator.next()
         } else {
           folderAttachment = folder.createFolder("pj")
         }
         var footer = "<strong>Pie&#768;ces jointes:</strong><ul>"
-        for (var z=0; z<attachments.length; z++) {
+        for (var z = 0; z < attachments.length; z++) {
           var file = folderAttachment.createFile(attachments[z])
           footer += "<li><a href='" + file.getUrl() + "'>" + file.getName() + "</a></li>"
         }
         html += footer + "</ul>"
       }
-      
+
       /* Conver the Email Thread into a PDF File */
       var tempFile = DriveApp.createFile("temp.html", html, "text/html")
-      folder.createFile(tempFile.getAs("application/pdf")).setName("Mail - " + subject + ".pdf")
+      var pdf = folder.createFile(tempFile.getAs("application/pdf")).setName("Mail - " + subject + ".pdf")
+      pdf.setDescription(threads[t].getId())
       tempFile.setTrashed(true)
-      
     }
   }
 }  
