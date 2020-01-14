@@ -379,11 +379,10 @@ function fx_htmlStyleRtRun(richTextRun) {
 
 /**
  * Archivage des mails labelisés dans un répertoire de Drive
- * @param {String} gmailLabelSource Label des mails à archiver
- * @param {String} gmailLabelCible Label des mails archivés
+ * @param {String} gmailLabel Label des mails à archiver
  * @param {String} driveFolderId  id du répertoire drive
  */
-function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
+function fx_saveGmailAsPDF(gmailLabel, driveFolderId) {
   var ui = SpreadsheetApp.getUi();
   var yesnoConfirm = ui.alert(
     "Archiver les mails ?",
@@ -391,7 +390,7 @@ function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
     ui.ButtonSet.YES_NO);
   if (yesnoConfirm != ui.Button.YES) return;
 
-  var threads = GmailApp.search("in:" + gmailLabelSource, 0, 5)
+  var threads = GmailApp.search("in:" + gmailLabel, 0, 5)
 
   var mailsArchived = []
 
@@ -408,24 +407,24 @@ function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
     }
 
     /* Gmail Label that contains the queue */
-    var labelSource = GmailApp.getUserLabelByName(gmailLabelSource)
-    var labelCible = GmailApp.getUserLabelByName(gmailLabelCible)
+    var label = GmailApp.getUserLabelByName(gmailLabel)
 
     for (var t = 0; t < threads.length; t++) {
-      if (msgIds.indexOf(threads[t].getId()) + 1) {
-        threads[t].removeLabel(labelSource)
-        continue
-      }
 
       var msgs = threads[t].getMessages()
       var html = ""
       var attachments = []
 
       var subject = threads[t].getFirstMessageSubject()
+      var isMsgFounded = false
 
       /* Append all the threads in a message in an HTML document */
       for (var m = 0; m < msgs.length; m++) {
         var msg = msgs[m]
+        if (msgIds.indexOf(msg.getId()) + 1) {
+          continue
+        }
+        isMsgFounded = true
         html += "De: " + msg.getFrom() + "<br />"
         html += "a&#768;: " + msg.getTo() + "<br />"
         if (msg.getCc())
@@ -442,8 +441,6 @@ function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
         for (var a = 0; a < atts.length; a++) {
           attachments.push(atts[a])
         }
-        threads[t].removeLabel(labelSource)
-        threads[t].addLabel(labelCible)
       }
 
       /* Save the attachment files and create links in the document's footer */
@@ -464,14 +461,19 @@ function fx_saveGmailAsPDF(gmailLabelSource, gmailLabelCible, driveFolderId) {
       }
 
       /* Conver the Email Thread into a PDF File */
-      var tempFile = DriveApp.createFile("temp.html", html, "text/html")
-      var pdf = folder.createFile(tempFile.getAs("application/pdf")).setName("Mail - " + subject + ".pdf")
-      pdf.setDescription(threads[t].getId())
-      tempFile.setTrashed(true)
-      mailsArchived.push(subject)
+      if (isMsgFounded) {
+        var tempFile = DriveApp.createFile("temp.html", html, "text/html")
+        var pdf = folder.createFile(tempFile.getAs("application/pdf")).setName("Mail - " + subject + ".pdf")
+        pdf.setDescription(threads[t].getId())
+        tempFile.setTrashed(true)
+        mailsArchived.push(subject)
+      }
+
+      threads[t].removeLabel(label)
+
     }
   }
-  if ( mailsArchived.length > 0 ) {
+  if (mailsArchived.length > 0) {
     ui.alert("Archivage des mails", mailsArchived.toString(), ui.ButtonSet.OK)
   } else {
     ui.alert("Archivage des mails", "Aucun mail à archiver", ui.ButtonSet.OK)
