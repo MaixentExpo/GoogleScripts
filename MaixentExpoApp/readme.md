@@ -13,6 +13,26 @@
 ## Activation de API Google Apps Script
 https://script.google.com/home/usersettings
 
+## Scopes nécessaire pour le projet MaixentExpoApp
+```json
+{
+  "timeZone": "Europe/Paris",
+  "dependencies": {},
+  "exceptionLogging": "STACKDRIVER",
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/presentations",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/script.send_mail",
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.modify",
+    "https://www.googleapis.com/auth/script.external_request"
+  ]
+}
+```
+
+
 ## Déclarations des applications utilisatrices
 
 ### Code.js
