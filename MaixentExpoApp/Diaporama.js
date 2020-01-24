@@ -74,6 +74,14 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
 
+  // affichage d'un panneau pour ouvrir le document crée
+  var url = oDiaporamaCible.getUrl();
+  var htmlOutput = HtmlService
+    .createHtmlOutput('<a href="' + url + '" target="_blank">Voir le résultat</a>')
+    .setWidth(300)
+    .setHeight(100);
+  SlidesApp.getUi().showModalDialog(htmlOutput, "Script terminé");
+  
   return oDiaporamaCible.getId();
 }
 
@@ -161,6 +169,14 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
 
+  // affichage d'un panneau pour ouvrir le document crée
+  var url = oDiaporamaCible.getUrl();
+  var htmlOutput = HtmlService
+    .createHtmlOutput('<a href="' + url + '" target="_blank">Voir le résultat</a>')
+    .setWidth(300)
+    .setHeight(100);
+  SlidesApp.getUi().showModalDialog(htmlOutput, "Script terminé");
+  
   return oDiaporamaCible.getId();
 }
 
@@ -249,5 +265,13 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
   } // endfor tableur
   oDiaporamaCible.saveAndClose();
 
+  // affichage d'un panneau pour ouvrir le document crée
+  var url = oDiaporamaCible.getUrl();
+  var htmlOutput = HtmlService
+    .createHtmlOutput('<a href="' + url + '" target="_blank">Voir le résultat</a>')
+    .setWidth(300)
+    .setHeight(100);
+  SlidesApp.getUi().showModalDialog(htmlOutput, "Script terminé");
+  
   return oDiaporamaCible.getId();
 }
