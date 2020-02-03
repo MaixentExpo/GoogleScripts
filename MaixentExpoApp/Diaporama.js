@@ -1,3 +1,4 @@
+
 /**
  * createDiaporamaFromSlide est en fait un publipostage de diapositives
  * La diapo Modèle contiendra des champs sous la forme {NomDeLaColonne}
@@ -10,8 +11,12 @@
  * sheetName   : nom de la feuille qui contient les données du tableur
  * filterName  : nom de la colonne sur laquelle le filtre sera effectué
  * filterValue : expression régulière de filtrage sur la colonne
+ * firstLine   : n° de la 1ère ligne des data
  */
 function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterValue) {
+  return diapo_createDiaporamaFromSlide2(sheetId, sheetName, filterName, filterValue, 2)
+}
+function diapo_createDiaporamaFromSlide2(sheetId, sheetName, filterName, filterValue, firstLine) {
   // Ouverture de la feuille
   var spreadsheet = SpreadsheetApp.openById(sheetId);
   var sheet = spreadsheet.getSheetByName(sheetName)
@@ -31,6 +36,16 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
       iCols[sCell] = iCol;
     } // endif
   } // endfor
+  // On ne prend que les lignes qui correspondent au critère filterName filterValue
+  var sDatas = [];
+  iLastRow = sValues.length;
+  var reFilter = new RegExp(filterValue, 'g');
+  for (iRow = firstLine-1; iRow < iLastRow; iRow++) {
+    if (("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null) {
+      sDatas.push(sValues[iRow]);
+    } // endif
+  } // endfor
+  iLastRow = sDatas.length;
 
   // Récupération de la diapo Modèle
   var fileModele = DriveApp.getFileById(SlidesApp.getActivePresentation().getId());
@@ -45,16 +60,6 @@ function diapo_createDiaporamaFromSlide(sheetId, sheetName, filterName, filterVa
   var oDiaporamaCible = SlidesApp.openById(fileCopy.getId());
   var oDiapoCibles = oDiaporamaCible.getSlides();
 
-  // On ne prend que les lignes qui correspondent au critère filterName filterValue
-  var sDatas = [];
-  iLastRow = sValues.length;
-  var reFilter = new RegExp(filterValue, 'g');
-  for (iRow = 1; iRow < iLastRow; iRow++) {
-    if (("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null) {
-      sDatas.push(sValues[iRow]);
-    } // endif
-  } // endfor
-  iLastRow = sDatas.length;
   // duplication de la 1ère diapo autant que d'enregistrement-1
   for (iRow = 1; iRow < iLastRow; iRow++) {
     oDiaporamaCible.appendSlide(oDiapoCibles[0]);
