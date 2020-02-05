@@ -291,7 +291,7 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
  * Valeur du filtre        : expression régulière du filtre
  * Répertoire du résultat  : répertoire du fichier résultat
  * Nom du fichier résultat : nom du fichier résultat
- * Convertir en Pdf        : fichier résultat qui sera convertit en pdf
+ * Convertir en Pdf        : option pour convertir en pdf le résultat
  * Lettre                  : url du 1er fichier à inclure dans le résultat
  * Annexe 1                : url de l'annexe 1
  * Annexe 2                : etc
@@ -302,7 +302,7 @@ function diapo_publipostage() {
   var ui = SpreadsheetApp.getUi(); //
   var yesnoConfirm = ui.alert(
     "PUBLIPOSTAGE",
-    'Veuillez confirmer par oui ou non',
+    'Veuillez confirmer par Oui ou Non',
     ui.ButtonSet.YES_NO);
   if (yesnoConfirm != ui.Button.YES) return;
   
@@ -406,8 +406,21 @@ function diapo_publipostage() {
   } // endfor tableur
   diaporamaCible.saveAndClose();
 
+  var url = ""
+  if ( inPdf ) {
+    var blob = DriveApp.getFileById(fileCopy.getId()).getBlob()
+    var pdfFile = DriveApp.createFile(blob)
+    // le fichier a été crée dans la racine du répertoire de l'utilisateur
+    // un fichier peur avoir plusieurs répertoires
+    DriveApp.getFolderById(folderId).addFile(pdfFile); // ajout du répertoire cible
+    DriveApp.getRootFolder().removeFile(pdfFile); // suppresion du répertoire racine du fichier
+    var url = pdfFile.getUrl()
+    fileCopy.setTrashed(true)  
+  } else {
+    var url = fileCopy.getUrl()
+  }
+
   // affichage d'un panneau pour ouvrir le document crée
-  var url = diaporamaCible.getUrl()
   var htmlOutput = HtmlService
     .createHtmlOutput('<a href="' + url + '" target="_blank">Voir le résultat</a>')
     .setWidth(300)
