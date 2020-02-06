@@ -129,6 +129,77 @@ function fx_selectEmail(source_file_id, source_range_name, cible_range_name, ran
   cell.setValue(emails);
 }
 
+function fx_envoyerMessageB() {
+  var ui = SpreadsheetApp.getUi();
+  var yesnoConfirm = ui.alert(
+    "Envoyer le message",
+    'Veuillez confirmer par Oui ou Non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
+  // Recup des champs dans la feuille courante
+  var spreadsheet = SpreadsheetApp.getActive();
+  var sheet = spreadsheet.getActiveSheet();
+
+  var replyTo = sheet.getRange("B2").getValue();
+  var to = sheet.getRange("B3").getValue();
+  var cc = sheet.getRange("B4").getValue();
+  var bcc = sheet.getRange("B5").getValue();
+  var pjSheet = sheet.getRange("B6").getValue();
+  var pjFile1 = sheet.getRange("B7").getValue();
+  var pjFile2 = sheet.getRange("B8").getValue();
+  var pjFile3 = sheet.getRange("B9").getValue();
+  var subject = sheet.getRange("B10").getValue();
+  // Message en Html enrichi
+  var richText = sheet.getRange("B11").getRichTextValue();
+  var html = fx_htmlEncodeRichText(richText);
+  // Envoi du message
+  var blobs = [];
+  if (pjSheet != "") {
+    blobs.push(fx_SpreadsheetToExcel(pjSheet));
+  }
+  if (pjFile1 != "") {
+    blobs.push(fx_FileToPdf(pjFile1, "&portrait=false"));
+  }
+  if (pjFile2 != "") {
+    blobs.push(fx_FileToPdf(pjFile2, "&portrait=true"));
+  }
+  if (pjFile3 != "") {
+    blobs.push(fx_FileToPdf(pjFile3, "&portrait=true"));
+  }
+  if (blobs.length > 0) {
+    MailApp.sendEmail({
+      replyTo: replyTo,
+      to: to,
+      cc: cc,
+      bcc: bcc,
+      subject: subject,
+      htmlBody: html,
+      attachments: blobs
+    });
+  } else {
+    MailApp.sendEmail({
+      replyTo: replyTo,
+      to: to,
+      cc: cc,
+      bcc: bcc,
+      subject: subject,
+      htmlBody: html
+    });
+  } // endif
+
+  // Historisation de l'action dans la plage LOG
+  if (sheet.getRange("C11") != "") {
+    var slog = sheet.getRange("C11").getValue();
+    var strace = Utilities.formatString("%s par %s",
+      Utilities.formatDate(new Date(),
+        spreadsheet.getSpreadsheetTimeZone(), "yyyy-MM-dd HH:mm:ss"),
+      Session.getActiveUser().getEmail());
+    slog = strace + "\n" + slog;
+    sheet.getRange("C11").setValue(slog);
+  }
+
+}
 
 function fx_envoyerMessage() {
   var ui = SpreadsheetApp.getUi();

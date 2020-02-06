@@ -50,3 +50,29 @@ function mailing_echangeAdresses2() {
   sheet.getRange("C5").setValue(cc);
 
 }
+
+function mailing_echangeAdressesB() {
+  var spreadsheet = SpreadsheetApp.getActive();
+  var sheet = spreadsheet.getActiveSheet();
+  
+  var replyTo = sheet.getRange("B2").getCell(1,1).getValue();
+  var to = sheet.getRange("B3").getCell(1,1).getValue();
+  var copy = sheet.getRange("B4").getCell(1,1).getValue();
+  var cc = sheet.getRange("B5").getCell(1,1).getValue();
+
+  var replyTo2 = sheet.getRange("C2").getCell(1,1).getValue();
+  var to2 = sheet.getRange("C3").getCell(1,1).getValue();
+  var copy2 = sheet.getRange("C4").getCell(1,1).getValue();
+  var cc2 = sheet.getRange("C5").getCell(1,1).getValue();
+
+  sheet.getRange("B2").setValue(replyTo2);
+  sheet.getRange("B3").setValue(to2);
+  sheet.getRange("B4").setValue(copy2);
+  sheet.getRange("B5").setValue(cc2);
+
+  sheet.getRange("C2").setValue(replyTo);
+  sheet.getRange("C3").setValue(to);
+  sheet.getRange("C4").setValue(copy);
+  sheet.getRange("C5").setValue(cc);
+
+}

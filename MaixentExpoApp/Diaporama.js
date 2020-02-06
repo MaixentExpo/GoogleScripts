@@ -306,22 +306,22 @@ function diapo_publipostage() {
     ui.ButtonSet.YES_NO);
   if (yesnoConfirm != ui.Button.YES) return;
   
-  var gabaritSheet = SpreadsheetApp.getActiveSheet()
+  var piloteSheet = SpreadsheetApp.getActiveSheet()
   // lecture des paramètres
-  var sheetUrl = gabaritSheet.getRange("B2").getValue()
-  var sheetName = gabaritSheet.getRange("B3").getValue()
-  var firstLineData = gabaritSheet.getRange("B4").getValue()
-  var filterName = gabaritSheet.getRange("B5").getValue()
-  var filterValue = gabaritSheet.getRange("B6").getValue()
-  var folderUrl = gabaritSheet.getRange("B7").getValue()
-  var slideName = gabaritSheet.getRange("B8").getValue()
-  var inPdf = gabaritSheet.getRange("B9").getValue()
+  var sheetUrl = piloteSheet.getRange("B2").getValue()
+  var sheetName = piloteSheet.getRange("B3").getValue()
+  var firstLineData = piloteSheet.getRange("B4").getValue()
+  var filterName = piloteSheet.getRange("B5").getValue()
+  var filterValue = piloteSheet.getRange("B6").getValue()
+  var folderUrl = piloteSheet.getRange("B7").getValue()
+  var slideName = piloteSheet.getRange("B8").getValue()
+  var inPdf = piloteSheet.getRange("B9").getValue()
   var docs = []
-  docs.push(gabaritSheet.getRange("B10").getValue())
-  docs.push(gabaritSheet.getRange("B11").getValue())
-  docs.push(gabaritSheet.getRange("B12").getValue())
-  docs.push(gabaritSheet.getRange("B13").getValue())
-  docs.push(gabaritSheet.getRange("B14").getValue())
+  docs.push(piloteSheet.getRange("B10").getValue())
+  docs.push(piloteSheet.getRange("B11").getValue())
+  docs.push(piloteSheet.getRange("B12").getValue())
+  docs.push(piloteSheet.getRange("B13").getValue())
+  docs.push(piloteSheet.getRange("B14").getValue())
 
   // Chargement des données
   var spreadsheet = SpreadsheetApp.openByUrl(sheetUrl)
@@ -419,6 +419,9 @@ function diapo_publipostage() {
   } else {
     var url = fileCopy.getUrl()
   }
+
+  // Ecriture du lien dans la feuille Pilote
+  piloteSheet.getRange("B15").setValue(url)
 
   // affichage d'un panneau pour ouvrir le document crée
   var htmlOutput = HtmlService
