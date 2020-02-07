@@ -3,6 +3,25 @@
  * Maixent.Expo@gmail.com
  */
 
+/**
+ * fx_getIdFromUrl : Extraire l'id d'une url Google Drive
+ * Sheets : https://docs.google.com/spreadsheets/d/idididid/...
+ * Slides : https://docs.google.com/presentation/d/idididid/...
+ * Docs   : https://docs.google.com/document/d/idididid/...
+ * File   : https://drive.google.com/open?id=1Cw5UE0TUC8ARRbQBmUW_U8CiM8_o_YuO
+ * Drive  : https://drive.google.com/drive/folders/1MjNf3-poTAo6cF6OJ83Y3Oi9J7enPhYy
+ * @param {String} urlOrId 
+ */
+function fx_getIdFromUrl(urlOrId) {
+  const regexDoc = /.*\/d\/(.*)\/.*/g
+  const regexFile = /.*\/open.id=(.*)/g
+  const regexFolder = /.*\/folders\/(.*)/g
+  var ids = regexDoc.exec(urlOrId)
+  ids = ids == null ? regexFile.exec(urlOrId) : null
+  ids = ids == null ? regexFolder.exec(urlOrId) : null
+  var id = ids == null ? urlOrId : ids[1]
+  return id
+}
 
 
 /**
@@ -541,6 +560,110 @@ function fx_saveGmailAsPDF(gmailLabel, driveFolderId) {
       }
 
       threads[t].removeLabel(label)
+
+    }
+  }
+  if (mailsArchived.length > 0) {
+    ui.alert("Archivage des mails", mailsArchived.toString(), ui.ButtonSet.OK)
+  } else {
+    ui.alert("Archivage des mails", "Aucun mail à archiver", ui.ButtonSet.OK)
+  }
+}
+
+/**
+ * Archivage des mails labelisés dans un répertoire de Drive
+ * Le label devra être la cellule B
+ */
+function fx_archiveGmail(rangeSubject, urlFolderOrId, rangeResult) {
+  var ui = SpreadsheetApp.getUi();
+  var yesnoConfirm = ui.alert(
+    "Récupérer la conversation",
+    'Veuillez confirmer par oui ou non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
+  var spreadsheet = SpreadsheetApp.getActive();
+  var subject = spreadsheet.getRange(rangeSubject).getValue()
+  var threads = GmailApp.search("subject:" + subject, 0, 5)
+
+  var mailsArchived = []
+
+  if (threads.length > 0) {
+
+    /* Google Drive folder where the Files would be saved */
+    var folder = DriveApp.getFolderById(fx_getIdFromUrl(urlFolderOrId));
+    // mémorisation des msgid déjà enregistrés dans le folder
+    var files = folder.getFiles()
+    var msgIds = []
+    while (files.hasNext()) {
+      var file = files.next();
+      msgIds.push(file.getDescription())
+    }
+
+    for (var t = 0; t < threads.length; t++) {
+
+      var msgs = threads[t].getMessages()
+      var html = ""
+      var attachments = []
+
+      var subject = threads[t].getFirstMessageSubject()
+      var isMsgFounded = false
+
+      /* Append all the threads in a message in an HTML document */
+      for (var m = 0; m < msgs.length; m++) {
+        var msg = msgs[m]
+        // if (msgIds.indexOf(msg.getId()) + 1) {
+        //   continue
+        // }
+        isMsgFounded = true
+        html += "De: " + msg.getFrom() + "<br />"
+        html += "a&#768;: " + msg.getTo() + "<br />"
+        if (msg.getCc())
+          html += "En copie: " + msg.getCc() + "<br />"
+        if (msg.getBcc())
+          html += "En copie caché: " + msg.getBcc() + "<br />"
+        html += "Date: " + Utilities.formatDate(msg.getDate(), "GMT", "dd/MM/yyyy HH:mm:ss") + "<br />"
+        html += "Objet: " + msg.getSubject() + "<br />"
+        html += "<hr />"
+        html += msg.getBody().replace(/<img[^>]*>/g, "")
+        html += "<hr />"
+
+        var atts = msg.getAttachments()
+        for (var a = 0; a < atts.length; a++) {
+          attachments.push(atts[a])
+        }
+      }
+
+      /* Save the attachment files and create links in the document's footer */
+      if (attachments.length > 0) {
+        var folderIterator = folder.getFoldersByName("pj")
+        var folderAttachment
+        if (folderIterator.hasNext()) {
+          folderAttachment = folderIterator.next()
+        } else {
+          folderAttachment = folder.createFolder("pj")
+        }
+        var footer = "<strong>Pie&#768;ces jointes:</strong><ul>"
+        for (var z = 0; z < attachments.length; z++) {
+          var file = folderAttachment.createFile(attachments[z])
+          footer += "<li><a href='" + file.getUrl() + "'>" + file.getName() + "</a></li>"
+        }
+        html += footer + "</ul>"
+      }
+
+      /* Conver the Email Thread into a PDF File */
+      if (isMsgFounded) {
+        var tempFile = DriveApp.createFile("temp.html", html, "text/html")
+        var pdf = folder.createFile(tempFile.getAs("application/pdf")).setName("Mail - " + subject + ".pdf")
+        pdf.setDescription(threads[t].getId())
+
+        tempFile.setTrashed(true)
+        mailsArchived.push(subject)
+
+        // url du pdf dans feuille courante
+        spreadsheet.getRange(rangeResult).setValue(pdf.getUrl());
+        
+      }
 
     }
   }
