@@ -52,6 +52,13 @@ function mailing_echangeAdresses2() {
 }
 
 function mailing_echangeAdressesB() {
+  var ui = SpreadsheetApp.getUi();
+  var yesnoConfirm = ui.alert(
+    "Échanger les adresses",
+    'Veuillez confirmer par Oui ou Non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
   var spreadsheet = SpreadsheetApp.getActive();
   var sheet = spreadsheet.getActiveSheet();
   

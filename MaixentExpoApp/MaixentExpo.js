@@ -570,15 +570,19 @@ function fx_saveGmailAsPDF(gmailLabel, driveFolderId) {
   }
 }
 
-/**
- * Archivage des mails labelisés dans un répertoire de Drive
- * Le label devra être la cellule B
- */
+
+ /**
+  * Archivage dans un répertoire de Drive
+  * des mails avec un subject particulier
+  * @param {String} rangeSubject  B10
+  * @param {String} urlFolderOrId https://drive.google.com/drive/folders/14ZQMmdVPBDVU09Htw-td4rdKgR2Y6TW0
+  * @param {String} rangeResult   B12
+  */
 function fx_archiveGmail(rangeSubject, urlFolderOrId, rangeResult) {
   var ui = SpreadsheetApp.getUi();
   var yesnoConfirm = ui.alert(
     "Récupérer la conversation",
-    'Veuillez confirmer par oui ou non',
+    'Veuillez confirmer par Oui ou Non',
     ui.ButtonSet.YES_NO);
   if (yesnoConfirm != ui.Button.YES) return;
 
@@ -660,9 +664,8 @@ function fx_archiveGmail(rangeSubject, urlFolderOrId, rangeResult) {
         tempFile.setTrashed(true)
         mailsArchived.push(subject)
 
-        // url du pdf dans feuille courante
+        // copie url du pdf dans la cellule résultat
         spreadsheet.getRange(rangeResult).setValue(pdf.getUrl());
-        
       }
 
     }
