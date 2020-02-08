@@ -19,6 +19,13 @@
  * nom du groupe qui va occuper la place impair, n°place impair, ref zone, n°place pair, nom du groupe qui va occuper la place pair
  */
 function bovins_attribuerLesPlacesAuRepas() {
+  var ui = SpreadsheetApp.getUi();
+  var yesnoConfirm = ui.alert(
+    "Attribuer les places",
+    'Veuillez confirmer par Oui ou Non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   spreadsheet.toast("Calcul en cours...");
   // Ouverture des feuilles et chargement des données en mémoire
