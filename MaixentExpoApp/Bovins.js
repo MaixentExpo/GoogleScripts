@@ -1,13 +1,13 @@
 /**
  * bovins_prepareMessageResultatConcours
- * Retourne le message à envoyer à la presse dans "cible_range_name"
+ * Retourne le message à envoyer à la presse dans "cible_range"
  * Les colonnes devront êtres préalablement triées sur Categorie, Section, Classification
  * On ne prend que les lignes avec Travail non vide
  * @param {String} source_file_id : id du Spreadsheet
  * @param {String} sheet_name : nom de l'onglet des données à analyser
- * @param {String} cible_range_name : plage nommée de réception du résultat du Spreadsheet courant
+ * @param {String} cible_range : cellule de réception du résultat du Spreadsheet courant
  */
-function bovins_prepareMessageResultatConcours(source_file_id, sheet_name, cible_range_name) {
+function bovins_prepareMessageResultatConcours(source_file_id, sheet_name, cible_range) {
   var ui = SpreadsheetApp.getUi();
   var yesnoConfirm = ui.alert(
      "Préparer le message",
@@ -115,7 +115,7 @@ function bovins_prepareMessageResultatConcours(source_file_id, sheet_name, cible
   // Ouverture du fichier mailing courant
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   // Copie du resulat dans la cible
-  var cible = spreadsheet.getRange(cible_range_name);
+  var cible = spreadsheet.getRange(cible_range);
   cible.setValue(s);
 
 } // end bovins_prepareMessageResultatConcours
