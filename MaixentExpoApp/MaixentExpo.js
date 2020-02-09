@@ -17,8 +17,8 @@ function fx_getIdFromUrl(urlOrId) {
   const regexFile = /.*\/open.id=(.*)/g
   const regexFolder = /.*\/folders\/(.*)/g
   var ids = regexDoc.exec(urlOrId)
-  ids = ids == null ? regexFile.exec(urlOrId) : null
-  ids = ids == null ? regexFolder.exec(urlOrId) : null
+  ids = ids == null ? regexFile.exec(urlOrId) : ids
+  ids = ids == null ? regexFolder.exec(urlOrId) : ids
   var id = ids == null ? urlOrId : ids[1]
   return id
 }

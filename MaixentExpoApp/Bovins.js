@@ -3,20 +3,20 @@
  * Retourne le message à envoyer à la presse dans "cible_range"
  * Les colonnes devront êtres préalablement triées sur Categorie, Section, Classification
  * On ne prend que les lignes avec Travail non vide
- * @param {String} source_file_id : id du Spreadsheet
+ * @param {String} urlOrIdOfSheet : id du Spreadsheet
  * @param {String} sheet_name : nom de l'onglet des données à analyser
  * @param {String} cible_range : cellule de réception du résultat du Spreadsheet courant
  */
-function bovins_prepareMessageResultatConcours(source_file_id, sheet_name, cible_range) {
+function bovins_prepareMessageResultatConcours(urlOrIdOfSheet, sheet_name, cible_range) {
   var ui = SpreadsheetApp.getUi();
   var yesnoConfirm = ui.alert(
-     "Préparer le message",
-     'Veuillez confirmer par oui ou non',
+     "Récupérer le résultat",
+     'Veuillez confirmer par Oui ou Non',
       ui.ButtonSet.YES_NO);
   if ( yesnoConfirm != ui.Button.YES ) return;
 
   // Ouverture de la feuille BOVINS
-  var spreadsheet_source = SpreadsheetApp.openById(source_file_id);
+  var spreadsheet_source = SpreadsheetApp.openById(fx_getIdFromUrl(urlOrIdOfSheet));
   var sheet = spreadsheet_source.getSheetByName(sheet_name)
   var iLastCol = sheet.getLastColumn()
   var iLastRow = sheet.getLastRow()
@@ -47,8 +47,8 @@ function bovins_prepareMessageResultatConcours(source_file_id, sheet_name, cible
   } // endfor
 
   // TRI des colonnes Categorie, Section, Classification
-  var range = sheet.getRange(2, 1, iLastRow, iLastCol);
-  range.sort([{column: iCategorie, ascending: true}, {column: iSection, ascending: true}, {column: iClassification, ascending: true}]);
+  // var range = sheet.getRange(2, 1, iLastRow, iLastCol);
+  // range.sort([{column: iCategorie, ascending: true}, {column: iSection, ascending: true}, {column: iClassification, ascending: true}]);
 
   var s = "";
   // Grand prix d'excellence
@@ -59,7 +59,6 @@ function bovins_prepareMessageResultatConcours(source_file_id, sheet_name, cible
     sClassification = sheet.getRange(iRow, iClassification).getValue().trim();
     if ( sClassification.indexOf("Grand Prix") == -1 ) 
       continue;  
-    sEleveur = sheet.getRange(iRow, iEleveur).getValue().trim();
     sCategorie = sheet.getRange(iRow, iCategorie).getValue().trim();
     s += sClassification + " " + sCategorie + " : " + sEleveur;
   } // endfor
