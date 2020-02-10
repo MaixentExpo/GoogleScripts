@@ -352,6 +352,10 @@ function diapo_publipostage() {
     } // endif
   } // endfor
   iLastRow = sDatas.length
+  if ( iLastRow == 0 ) {
+    ui.alert("PUBLIPOSTAGE", "Aucun enregistrement trouvé", ui.ButtonSet.OK)
+    return
+  }
   
   // Récupération de la lettre et des annexes
   var slidesAll = []
