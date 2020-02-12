@@ -7,12 +7,12 @@ function vins_prepareMessageResultat(source_file_id, sheet_name, cible_range_nam
     var ui = SpreadsheetApp.getUi(); // Same variations.
     var yesnoConfirm = ui.alert(
        "Préparer le message",
-       'Veuillez confirmer par oui ou non',
+       'Veuillez confirmer par Oui ou Non',
         ui.ButtonSet.YES_NO);
     if ( yesnoConfirm != ui.Button.YES ) return;
   
     // Ouverture de la feuille VINS
-    var spreadsheet_source = SpreadsheetApp.openById(source_file_id);
+    var spreadsheet_source = SpreadsheetApp.openById(fx_getIdFromUrl(source_file_id));
     var sheet = spreadsheet_source.getSheetByName(sheet_name)
     // Recherche de la position des colonnes sur la 1ère ligne
     var iLastCol = sheet.getLastColumn()
