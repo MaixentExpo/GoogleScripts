@@ -73,7 +73,7 @@ var Couleur = function () {
   } // end new_couleur
 } // end class Couleur
 
-function fx_recupEmail(source_file_id, source_range_name, cible_range_name) {
+function fx_recupEmail(source_IdorUrl, source_range_name, cible_range_name) {
   var ui = SpreadsheetApp.getUi(); // Same variations.
   var yesnoConfirm = ui.alert(
     "Récupérer les emails",
@@ -82,7 +82,7 @@ function fx_recupEmail(source_file_id, source_range_name, cible_range_name) {
   if (yesnoConfirm != ui.Button.YES) return;
 
   // Recup emails 
-  var spreadsheet_source = SpreadsheetApp.openById(source_file_id);
+  var spreadsheet_source = SpreadsheetApp.openById(fx_getIdFromUrl(source_IdorUrl));
   var values = spreadsheet_source.getRangeByName(source_range_name).getValues();
   var iLastRow = values.length;
   var emails = "";
@@ -676,3 +676,7 @@ function fx_archiveGmail(rangeSubject, urlFolderOrId, rangeResult) {
     ui.alert("Archivage des mails", "Aucun mail à archiver", ui.ButtonSet.OK)
   }
 }  
+
+function recupererEmail() {
+
+}
