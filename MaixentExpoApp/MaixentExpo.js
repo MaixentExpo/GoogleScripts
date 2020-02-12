@@ -575,10 +575,10 @@ function fx_saveGmailAsPDF(gmailLabel, driveFolderId) {
   * Archivage dans un répertoire de Drive
   * des mails avec un subject particulier
   * @param {String} rangeSubject  B10
-  * @param {String} urlFolderOrId https://drive.google.com/drive/folders/14ZQMmdVPBDVU09Htw-td4rdKgR2Y6TW0
+  * @param {String} urlIforRangeOfFolder https://drive.google.com/drive/folders/14ZQMmdVPBDVU09Htw-td4rdKgR2Y6TW0 ou cellule
   * @param {String} rangeResult   B12
   */
-function fx_archiveGmail(rangeSubject, urlFolderOrId, rangeResult) {
+function fx_archiveGmail(rangeSubject, urlIforRangeOfFolder, rangeResult) {
   var ui = SpreadsheetApp.getUi();
   var yesnoConfirm = ui.alert(
     "Récupérer la conversation",
@@ -595,7 +595,12 @@ function fx_archiveGmail(rangeSubject, urlFolderOrId, rangeResult) {
   if (threads.length > 0) {
 
     /* Google Drive folder where the Files would be saved */
-    var folder = DriveApp.getFolderById(fx_getIdFromUrl(urlFolderOrId));
+    if ( urlIforRangeOfFolder.indexOf("https") > -1 ) {
+      var urlOrId = urlIforRangeOfFolder
+    } else {
+      var urlOrId = spreadsheet.getRange(urlIforRangeOfFolder).getValue()
+    }
+    var folder = DriveApp.getFolderById(fx_getIdFromUrl(urlOrId));
     // mémorisation des msgid déjà enregistrés dans le folder
     var files = folder.getFiles()
     var msgIds = []
