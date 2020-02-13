@@ -40,7 +40,7 @@ function diapo_createDiaporamaFromSlide2(sheetId, sheetName, filterName, filterV
   var sDatas = [];
   iLastRow = sValues.length;
   var reFilter = new RegExp(filterValue, 'g');
-  for (iRow = firstLine-1; iRow < iLastRow; iRow++) {
+  for (iRow = firstLine - 1; iRow < iLastRow; iRow++) {
     if (("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null) {
       sDatas.push(sValues[iRow]);
     } // endif
@@ -86,7 +86,7 @@ function diapo_createDiaporamaFromSlide2(sheetId, sheetName, filterName, filterV
     .setWidth(300)
     .setHeight(100);
   SlidesApp.getUi().showModalDialog(htmlOutput, "Script terminé");
-  
+
   return oDiaporamaCible.getId();
 }
 
@@ -181,7 +181,7 @@ function diapo_createDiaporamaFromSlide24(sheetId, sheetName, filterName, filter
     .setWidth(300)
     .setHeight(100);
   SlidesApp.getUi().showModalDialog(htmlOutput, "Script terminé");
-  
+
   return oDiaporamaCible.getId();
 }
 
@@ -277,7 +277,7 @@ function diapo_publipostageBadge24(sheetId, sheetName, filterName, filterValue) 
     .setWidth(300)
     .setHeight(100);
   SlidesApp.getUi().showModalDialog(htmlOutput, "Script terminé");
-  
+
   return oDiaporamaCible.getId();
 }
 
@@ -305,7 +305,7 @@ function diapo_publipostage() {
     'Veuillez confirmer par Oui ou Non',
     ui.ButtonSet.YES_NO);
   if (yesnoConfirm != ui.Button.YES) return;
-  
+
   var piloteSheet = SpreadsheetApp.getActiveSheet()
   // lecture des paramètres
   var sheetUrl = piloteSheet.getRange("B2").getValue()
@@ -346,30 +346,30 @@ function diapo_publipostage() {
   var sDatas = []
   iLastRow = sValues.length
   var reFilter = new RegExp(filterValue, 'g')
-  for (iRow = parseInt(firstLineData)-1; iRow < iLastRow; iRow++) {
+  for (iRow = parseInt(firstLineData) - 1; iRow < iLastRow; iRow++) {
     if (("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null) {
       sDatas.push(sValues[iRow])
     } // endif
   } // endfor
   iLastRow = sDatas.length
-  if ( iLastRow == 0 ) {
+  if (iLastRow == 0) {
     ui.alert("PUBLIPOSTAGE", "Aucun enregistrement trouvé", ui.ButtonSet.OK)
     return
   }
-  
+
   // Récupération de la lettre et des annexes
   var slidesAll = []
   var diaporamaModele = null // le 1er document servira de modèle au diaporama cible
-  for ( var idoc in docs ) {
-    if ( docs[idoc] != "" ) {
+  for (var idoc in docs) {
+    if (docs[idoc] != "") {
       var presentation = SlidesApp.openByUrl(docs[idoc])
-      if ( diaporamaModele == null ) {
+      if (diaporamaModele == null) {
         diaporamaModele = presentation
       }
       var slides = presentation.getSlides()
-      for (var islide=0; islide<slides.length; islide++) {
+      for (var islide = 0; islide < slides.length; islide++) {
         slidesAll.push(slides[islide])
-      }  
+      }
     }
   }
 
@@ -388,17 +388,17 @@ function diapo_publipostage() {
 
   // duplication des diapos autant de fois que d'enregistrements
   for (iRow = 0; iRow < iLastRow; iRow++) {
-    for (var islide=0; islide<slidesAll.length; islide++) {
+    for (var islide = 0; islide < slidesAll.length; islide++) {
       diaporamaCible.appendSlide(slidesAll[islide])
     }
   } // endfor
-  
+
   var diapoCibles = diaporamaCible.getSlides()
-  
+
   // OK, maintenant on fusionne les données dans les diapos
   var iDiapo = 0
   for (iRow = 0; iRow < iLastRow; iRow++) {
-    for (var islide=0; islide<slidesAll.length; islide++) {
+    for (var islide = 0; islide < slidesAll.length; islide++) {
       // Recherche des colonnes dans le document et fusion des données
       for (var key in iCols) {
         sCell = ("" + sDatas[iRow][iCols[key]]).trim()
@@ -411,7 +411,7 @@ function diapo_publipostage() {
   diaporamaCible.saveAndClose();
 
   var url = ""
-  if ( inPdf ) {
+  if (inPdf) {
     var blob = DriveApp.getFileById(fileCopy.getId()).getBlob()
     var pdfFile = DriveApp.createFile(blob)
     // le fichier a été crée dans la racine du répertoire de l'utilisateur
@@ -419,7 +419,142 @@ function diapo_publipostage() {
     DriveApp.getFolderById(folderId).addFile(pdfFile); // ajout du répertoire cible
     DriveApp.getRootFolder().removeFile(pdfFile); // suppresion du répertoire racine du fichier
     var url = pdfFile.getUrl()
-    fileCopy.setTrashed(true)  
+    fileCopy.setTrashed(true)
+  } else {
+    var url = fileCopy.getUrl()
+  }
+
+  // Ecriture du lien dans la feuille Pilote
+  piloteSheet.getRange("B15").setValue(url)
+
+  // affichage d'un panneau pour ouvrir le document crée
+  var htmlOutput = HtmlService
+    .createHtmlOutput('<a href="' + url + '" target="_blank">Voir le résultat</a>')
+    .setWidth(300)
+    .setHeight(100)
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, "Script terminé")
+}
+
+/**
+ * diapo_publipostage : Scripts d'édition d'étiquettes
+ * à raison de 14 étiquettes par page
+ * Les parmètres du publipostage sont dans une feuille à partir de la cellule B2
+ * Fichier des données     : l'url du tableur des données
+ * Feuille des données     : la feuille qui contient les données
+ * Ligne des données       : à partir de cette ligne
+ * Colonne à filtrer       : colonne qui sert au filtrage éventuel
+ * Valeur du filtre        : expression régulière du filtre
+ * Répertoire du résultat  : répertoire du fichier résultat
+ * Nom du fichier résultat : nom du fichier résultat
+ * Convertir en Pdf        : option pour convertir en pdf le résultat
+ * Slide des étiquettes    : url du fichier slide planche des étiquettes 
+ */
+function diapo_etiquettes() {
+  var ui = SpreadsheetApp.getUi(); //
+  var yesnoConfirm = ui.alert(
+    "PUBLIPOSTAGE EN PDF DES ETIQUETTES",
+    'Veuillez confirmer par Oui ou Non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
+  var piloteSheet = SpreadsheetApp.getActiveSheet()
+  // lecture des paramètres
+  var sheetUrl = piloteSheet.getRange("B2").getValue()
+  var sheetName = piloteSheet.getRange("B3").getValue()
+  var firstLineData = piloteSheet.getRange("B4").getValue()
+  var filterName = piloteSheet.getRange("B5").getValue()
+  var filterValue = piloteSheet.getRange("B6").getValue()
+  var folderUrl = piloteSheet.getRange("B7").getValue()
+  var slideName = piloteSheet.getRange("B8").getValue()
+  var inPdf = piloteSheet.getRange("B9").getValue()
+  var modele = piloteSheet.getRange("B10").getValue()
+
+  // Chargement des données
+  var spreadsheet = SpreadsheetApp.openByUrl(sheetUrl)
+  var sheet = spreadsheet.getSheetByName(sheetName)
+  var iLastCol = sheet.getLastColumn()
+  var iLastRow = sheet.getLastRow()
+  // chargement global de toutes les données de la feuille
+  // pour optimiser les ressources du serveur de Google
+  var sValues = sheet.getRange(1, 1, iLastRow, iLastCol).getValues()
+  // Lecture de la ligne d'entête pour mémoriser le nom des colonnes et leur position
+  var iCols = {}
+  var sCell = ""
+  var iRow = 0
+  var iCol
+  for (iCol = 0; iCol < iLastCol; iCol++) {
+    sCell = ("" + sValues[iRow][iCol]).trim()
+    if (sCell != "") {
+      iCols[sCell] = iCol
+    } // endif
+  } // endfor
+  // On ne prend que les lignes qui correspondent au critère filterName filterValue
+  var sDatas = []
+  iLastRow = sValues.length
+  var reFilter = new RegExp(filterValue, 'g')
+  for (iRow = parseInt(firstLineData) - 1; iRow < iLastRow; iRow++) {
+    if (("" + sValues[iRow][iCols[filterName]]).match(reFilter, 'g') != null) {
+      sDatas.push(sValues[iRow])
+    } // endif
+  } // endfor
+  iLastRow = sDatas.length
+  if (iLastRow == 0) {
+    ui.alert("PUBLIPOSTAGE", "Aucun enregistrement trouvé", ui.ButtonSet.OK)
+    return
+  }
+
+  // Récupération de la lettre et des annexes
+  var diaporamaModele = SlidesApp.openByUrl(modele)
+
+  // Duplication du diaporama modèle
+  var fileModele = DriveApp.getFileById(diaporamaModele.getId())
+  const regex = /.*\/folders\/(.*)/g
+  var folderId = regex.exec(folderUrl)[1]
+  var folderCopy = DriveApp.getFolderById(folderId)
+  var fileCopy = fileModele.makeCopy(slideName, folderCopy)
+  var diaporamaCible = SlidesApp.openById(fileCopy.getId())
+  var diapoCibles = diaporamaCible.getSlides()
+
+  // duplication des diapos à raison de 14 enregistrements par slide
+  var qPage = Math.floor(iLastRow / 14)
+  for (var islide = 0; islide < qPage; islide++) {
+    diaporamaCible.appendSlide(diapoCibles[0])
+  } // endfor
+  diapoCibles = diaporamaCible.getSlides()
+
+  // OK, maintenant on fusionne les données dans les étiquettes
+  var iPage = 0
+  var iEtiquette = 1
+  for (iRow = 0; iRow < iLastRow; iRow++) {
+    // Recherche des colonnes dans le document et fusion des données
+    for (var key in iCols) {
+      sCell = ("" + sDatas[iRow][iCols[key]]).trim()
+      diapoCibles[iPage].replaceAllText("{" + key + iEtiquette + "}", sCell)
+    } // endfor
+    iEtiquette++
+    if (iEtiquette > 14) {
+      iPage++;
+      iEtiquette = 1;
+    } // endif  
+  } // endfor tableur
+  // sur la dernière page on efface les {...} qui restent
+  for (; iEtiquette < 15; iEtiquette++) {
+    for (var key in iCols) {
+      diapoCibles[iPage].replaceAllText("{" + key + iEtiquette + "}", "")
+    } // endfor
+  } // endfor
+  diaporamaCible.saveAndClose();
+
+  var url = ""
+  if (inPdf) {
+    var blob = DriveApp.getFileById(fileCopy.getId()).getBlob()
+    var pdfFile = DriveApp.createFile(blob)
+    // le fichier a été crée dans la racine du répertoire de l'utilisateur
+    // un fichier peur avoir plusieurs répertoires
+    DriveApp.getFolderById(folderId).addFile(pdfFile); // ajout du répertoire cible
+    DriveApp.getRootFolder().removeFile(pdfFile); // suppresion du répertoire racine du fichier
+    var url = pdfFile.getUrl()
+    fileCopy.setTrashed(true)
   } else {
     var url = fileCopy.getUrl()
   }
