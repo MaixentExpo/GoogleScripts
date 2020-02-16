@@ -105,6 +105,13 @@ function vins_prepareMessageResultat(source_file_id, sheet_name, cible_range_nam
  * - Table     : le n° de la table pour le concours
  */
 function vins_repartirBouteillesSurTables() {
+  var ui = SpreadsheetApp.getUi(); //
+  var yesnoConfirm = ui.alert(
+    "REPARTIR LES BOUTEILLES",
+    'Veuillez confirmer par Oui ou Non',
+    ui.ButtonSet.YES_NO);
+  if (yesnoConfirm != ui.Button.YES) return;
+
   // Ouverture du Spreadsheet courant
   var spreadsheet = SpreadsheetApp.getActive()
 
