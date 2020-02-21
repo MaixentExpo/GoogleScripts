@@ -352,6 +352,30 @@ function fx_FileToPdf(FileId, parametres) {
   return blob;
 }
 
+/**
+ * fx_exportPdf
+ * Export d'un fichier en pdf dans le même répertoire
+ * @param {String} UrlorId 
+ */
+function fx_exportPdf(UrlorId) {
+  var sourceFile = DriveApp.getFileById(fx_getIdFromUrl(UrlorId))
+  // un fichier peut avoir plusieurs répertoires parents
+  // on ne pendra que le 1er parent
+  var folders = sourceFile.getParents()
+  var folder
+  while (folders.hasNext()) {
+    folder = folders.next();
+    break;
+  }
+  // Quand on créé un fichier à partir d'un blob, on récupère automatiquement uns pdf, Incroyable Non ?
+  var pdfFile = DriveApp.createFile(sourceFile.getBlob())
+  // le fichier a été crée dans la racine du répertoire de l'utilisateur
+  // on va le déplacer dans le répertoire du fichier source
+  folder.addFile(pdfFile); // ajout du répertoire cible
+  DriveApp.getRootFolder().removeFile(pdfFile); // suppresion du répertoire racine du fichier
+  return  pdfFile.getUrl()
+}
+
 function fx_dialogCreatePdf(ui, folderId, fileId, pdfParameters) {
   var blob = fx_FileToPdf(fileId, pdfParameters);
   var folder = DriveApp.getFolderById(folderId);
