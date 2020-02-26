@@ -172,7 +172,7 @@ function fx_envoyerMessageB() {
   // Message en Html enrichi
   var richText = sheet.getRange("B11").getRichTextValue();
   var html = fx_htmlEncodeRichText(richText);
-  // Envoi du message
+  // Pièces jointes
   var blobs = [];
   if (pjSheet != "") {
     blobs.push(fx_SpreadsheetToExcel(pjSheet));
@@ -186,6 +186,7 @@ function fx_envoyerMessageB() {
   if (pjFile3 != "") {
     blobs.push(fx_FileToPdf(pjFile3, "&portrait=true"));
   }
+  // Envoi du message
   if (blobs.length > 0) {
     MailApp.sendEmail({
       replyTo: replyTo,
