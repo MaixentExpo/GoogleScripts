@@ -102,7 +102,7 @@ function stands_fusionPlan() {
         for (iRow=0; iRow<iLastRow; iRow++) {
           var ss = sDatas[iRow][iCols["INSCR"]].toString()
           if ( inscr[1] == ss ) {
-            var secteur = sDatas[iRow][iCols["Secteur"]]
+            var secteur = sDatas[iRow][iCols["SECTEUR"]]
             if ( secteur == "Viticulture" ) {
               // stand Viticulture
               shapes[iShape].getFill().setSolidFill("#ead1dc") // magenta clair 3
