@@ -404,6 +404,7 @@ function diapo_publipostage() {
         sCell = ("" + sDatas[iRow][iCols[key]]).trim()
         diapoCibles[iDiapo].replaceAllText("{$date}", fx_frenchDate(new Date()));
         diapoCibles[iDiapo].replaceAllText("{" + key + "}", sCell)
+        diapoCibles[iDiapo].replaceAllText("{" + key + " €}", Utilities.formatString("%.2f €", parseInt(sCell)) )
       } // endfor key
       iDiapo++
     }
